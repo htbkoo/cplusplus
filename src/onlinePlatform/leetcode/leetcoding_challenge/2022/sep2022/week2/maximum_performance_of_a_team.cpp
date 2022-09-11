@@ -11,11 +11,12 @@
 #include <iostream> // includes cin to read from stdin and cout to write to stdout
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
-struct sortByEfficientDescThenSpeedDesc {
+struct Comparator {
     vector<int>& speed;
     vector<int>& efficiency;
-    sortByEfficientDescThenSpeedDesc(vector<int>& aSpeed, vector<int>& aEfficiency):
-    speed(aSpeed), efficiency(aEfficiency) {
+    bool isBySpeedFirst;
+    Comparator(vector<int>& aSpeed, vector<int>& aEfficiency, bool aIsBySpeedFirst):
+    speed(aSpeed), efficiency(aEfficiency), isBySpeedFirst(aIsBySpeedFirst) {
     }
 
     inline bool operator() (int i1, int i2) {
@@ -24,35 +25,14 @@ struct sortByEfficientDescThenSpeedDesc {
         int efficiency1 = this->efficiency[i1];
         int efficiency2 = this->efficiency[i2];
 
-        if (efficiency1 == efficiency2) {
+        if (this->isBySpeedFirst || efficiency1 == efficiency2) {
             return speed1 > speed2;
+        } else {
+            return efficiency1 > efficiency2;
         }
-
-        return efficiency1 > efficiency2;
     }
 };
     
-struct sortBySpeedDescThenEfficiencyDesc {
-    vector<int>& speed;
-    vector<int>& efficiency;
-    sortBySpeedDescThenEfficiencyDesc(vector<int>& aSpeed, vector<int>& aEfficiency):
-    speed(aSpeed), efficiency(aEfficiency) {
-    }
-
-    inline bool operator() (int i1, int i2) {
-        int speed1 = this->speed[i1];
-        int speed2 = this->speed[i2];
-        int efficiency1 = this->efficiency[i1];
-        int efficiency2 = this->efficiency[i2];
-
-        if (speed1 == speed2) {
-            return efficiency1 > efficiency2;
-        }
-
-        return speed1 > speed2;
-    }
-};
-
 class Solution {
 public:
     int maxPerformance(int n, vector<int>& speed, vector<int>& efficiency, int k) {
@@ -64,11 +44,11 @@ public:
         for (auto i = 0; i < n; i++) {
             indicesByEfficientDescThenSpeedDesc.push_back(i);
         }
-        sort(indicesByEfficientDescThenSpeedDesc.begin(), indicesByEfficientDescThenSpeedDesc.end(), sortByEfficientDescThenSpeedDesc(speed, efficiency));
+        sort(indicesByEfficientDescThenSpeedDesc.begin(), indicesByEfficientDescThenSpeedDesc.end(), Comparator(speed, efficiency, false));
         
         int firstIdx = indicesByEfficientDescThenSpeedDesc[0];
 
-        priority_queue<int, vector<int>, sortBySpeedDescThenEfficiencyDesc> pq(sortBySpeedDescThenEfficiencyDesc(speed, efficiency));
+        priority_queue<int, vector<int>, Comparator> pq(Comparator(speed, efficiency, true));
         pq.push(firstIdx);
 
         long answer = (long) speed[firstIdx] * (long) efficiency[firstIdx];
@@ -98,6 +78,22 @@ public:
 };
 
 /* 
+struct sortBySpeedDescThenEfficiencyDesc {
+    vector<int>& speed;
+    vector<int>& efficiency;
+    sortBySpeedDescThenEfficiencyDesc(vector<int>& aSpeed, vector<int>& aEfficiency):
+    speed(aSpeed), efficiency(aEfficiency) {
+    }
+
+    inline bool operator() (int i1, int i2) {
+        int speed1 = this->speed[i1];
+        int speed2 = this->speed[i2];
+        int efficiency1 = this->efficiency[i1];
+        int efficiency2 = this->efficiency[i2];
+
+    }
+};
+
 class WASolution {
 public:
     int maxPerformance(int n, vector<int>& speed, vector<int>& efficiency, int k) {
