@@ -53,8 +53,52 @@ struct sortBySpeedDescThenEfficiencyDesc {
     }
 };
 
-
 class Solution {
+public:
+    int maxPerformance(int n, vector<int>& speed, vector<int>& efficiency, int k) {
+        if (k == 0) {
+            return 0;
+        }
+
+        vector<int> indicesByEfficientDescThenSpeedDesc;
+        for (auto i = 0; i < n; i++) {
+            indicesByEfficientDescThenSpeedDesc.push_back(i);
+        }
+        sort(indicesByEfficientDescThenSpeedDesc.begin(), indicesByEfficientDescThenSpeedDesc.end(), sortByEfficientDescThenSpeedDesc(speed, efficiency));
+        
+        int firstIdx = indicesByEfficientDescThenSpeedDesc[0];
+
+        priority_queue<int, vector<int>, sortBySpeedDescThenEfficiencyDesc> pq(sortBySpeedDescThenEfficiencyDesc(speed, efficiency));
+        pq.push(firstIdx);
+
+        long answer = (long) speed[firstIdx] * (long) efficiency[firstIdx];
+        long totalSpeed = speed[firstIdx];
+        int minEff = efficiency[firstIdx];
+
+        for (int i = 1; i < indicesByEfficientDescThenSpeedDesc.size(); i++) {
+            int idx = indicesByEfficientDescThenSpeedDesc[i];
+            
+            int prevSlowestSpeed = speed[pq.top()];
+
+            if (pq.size() < k || speed[idx] > prevSlowestSpeed) {
+                pq.push(idx);
+                totalSpeed += speed[idx];
+                minEff = min(minEff, efficiency[idx]);
+                if (pq.size() > k) {                    
+                    totalSpeed -= prevSlowestSpeed;
+                    pq.pop();
+                }
+
+                answer = max(answer, totalSpeed * minEff);
+            }
+        }
+
+        return answer % 1000000007;        
+    }
+};
+
+/* 
+class WASolution {
 public:
     int maxPerformance(int n, vector<int>& speed, vector<int>& efficiency, int k) {
         if (k == 0) {
@@ -99,7 +143,7 @@ public:
 };
 
 /* 
-class Solution {
+class WIPSolution {
 public:
     int maxPerformance(int n, vector<int>& speed, vector<int>& efficiency, int k) {
         if (k == 0) {
