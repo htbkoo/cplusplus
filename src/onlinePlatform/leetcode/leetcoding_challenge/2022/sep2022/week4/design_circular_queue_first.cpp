@@ -16,21 +16,17 @@ class MyCircularQueue {
 public:
     vector<int> q;
     int lo = 0;
-    int hi = 0;
     int k;
     
-    MyCircularQueue(int k) {        
+    MyCircularQueue(int k) {
         this->k = k;
-        this->q = vector<int>(k, 0);
     }
     
     bool enQueue(int value) {
         if (isFull()) {
             return false;
-        } else {
-            q[hi % k] = value;
-            hi = (hi % k) + 1;
-            _size++;
+        } else {            
+            q.push_back(value);
             return true;
         }
     }
@@ -39,8 +35,7 @@ public:
         if (isEmpty()) {
             return false;
         } else {
-            lo = (lo + 1) % k;
-            _size--;
+            lo++;
             return true;
         }
     }
@@ -57,20 +52,22 @@ public:
         if (isEmpty()) {
             return -1;
         } else {
-            return q[hi - 1];
+            return q[q.size() - 1];
         }        
     }
     
     bool isEmpty() {
-        return _size == 0;
+        return _size() == 0;
     }
     
     bool isFull() {
-        return _size >= k;
+        return _size() >= k;
     }
 
 private:
-    int _size = 0;
+    int _size() {
+        return q.size() - lo;
+    }
 };
 
 /**
@@ -83,19 +80,3 @@ private:
  * bool param_5 = obj->isEmpty();
  * bool param_6 = obj->isFull();
  */
-
-int main() {
-    MyCircularQueue myCircularQueue = MyCircularQueue(3);
-
-    cout << myCircularQueue.enQueue(1) << endl;
-    cout << myCircularQueue.enQueue(2) << endl;
-    cout << myCircularQueue.enQueue(3) << endl;
-    cout << myCircularQueue.enQueue(4) << endl;
-    cout << myCircularQueue.Rear() << endl;
-    cout << myCircularQueue.isFull() << endl;
-    cout << myCircularQueue.deQueue() << endl;
-    cout << myCircularQueue.enQueue(4) << endl;
-    cout << myCircularQueue.Rear() << endl;
-
-    return 0;
-}
