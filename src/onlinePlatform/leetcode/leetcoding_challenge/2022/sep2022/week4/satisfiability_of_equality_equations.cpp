@@ -14,11 +14,14 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 
 class Solution {
 public:
-    bool equationsPossible(vector<string>& equations) {
+    bool equationsPossible(vector<string>& equations) {            
+        unordered_map<char, unordered_set<char>> equals;
+        unordered_map<char, unordered_set<char>> notEquals;
+
+        parents = unordered_map<char, char>();
+
         int EQUATION_SIZE = 4;
 
-        unordered_set<char> allChars;
-        
         for (auto equation: equations) {
             if (equation.size() != EQUATION_SIZE) {
                 throw invalid_argument("invalid equation: " + equation);
@@ -27,8 +30,8 @@ public:
             char a = equation[0];
             char b = equation[3];
 
-            allChars.insert(a);
-            allChars.insert(b);
+            parents[a] = a;
+            parents[b] = b;
             
             if (equation[1] == '=') {
                 equals[a].insert(b);
@@ -41,38 +44,56 @@ public:
             }            
         }
 
-        for (char ch: allChars) {
-            if (!dfs(ch, unordered_set<char>(),unordered_set<char>{ch}, unordered_set<char>())) {
-                return false;
+        for (auto &[ch, neighbours]: equals) {
+            for (char nextCh: neighbours) {
+                unionDsu(ch, nextCh);
+            }
+        }
+
+        for (auto &[ch, neighbours]: notEquals) {
+            for (char nextCh: neighbours) {
+                if (findParent(ch) == findParent(nextCh)) {
+                    return false;
+                }
             }
         }
 
         return true;
     }
 
-    bool dfs(
-        char ch, 
-        unordered_set<char> visited, 
-        unordered_set<char> currEqual, 
-        unordered_set<char> currNotEqual
-    ) {
-        if (visited.count(ch) > 0) {
-            return true;
+    char findParent(char ch) {
+        if (parents.count(ch) == 0) {
+            parents[ch] = ch;
         }
-        visited.insert(ch);
+        // path compression
+        if (parents[ch] != ch) {
+            parents[ch] = findParent(parents[ch]);
+        }
+        return parents[ch];
+    }
 
-
-
+    void unionDsu(char ch1, char ch2) {
+        ch1 = findParent(ch1);
+        ch2 = findParent(ch2);
+        if (parents[ch1] == parents[ch2]) {
+            return;
+        }
+        parents[ch2] = parents[ch1];
     }
 
 private:
-    unordered_map<char, unordered_set<char>> equals;
-    unordered_map<char, unordered_set<char>> notEquals;
+    unordered_map<char, char> parents;
 };
 
 int main() {
     Solution soln;
     
+    // vector<string> equations1 = {"a==b", "b!=a"};
+    // cout << soln.equationsPossible(equations1) << endl;
+    // vector<string> equations2 = {"a==b", "b==a"};
+    // cout << soln.equationsPossible(equations2) << endl;
+    vector<string> equations3 = {"a==b","c==d","a==c","a!=d"};
+    cout << soln.equationsPossible(equations3) << endl;
 
     return 0;
 }
