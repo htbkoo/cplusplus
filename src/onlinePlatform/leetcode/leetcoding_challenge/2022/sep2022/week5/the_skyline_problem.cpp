@@ -29,12 +29,12 @@ public:
 
                 ms.erase(prevHeight);
 
-                addToAnswer(answer, prevRight, ms);
+                addToAnswer(answer, prevRight, ms, false);
             }
 
             dq.push_back(pair{right, height});
             ms.insert(height);
-            addToAnswer(answer, left, ms);
+            addToAnswer(answer, left, ms, false);
         }
 
         while (dq.size() > 0) {
@@ -43,52 +43,144 @@ public:
 
             ms.erase(prevHeight);
 
-            addToAnswer(answer, prevRight, ms);
+            addToAnswer(answer, prevRight, ms, true);
         }
 
-        return buildings;
+        return answer;
     }
 
-    void addToAnswer(vector<vector<int>>& answer, int x, multiset<int> ms) {
+    void addToAnswer(vector<vector<int>>& answer, int x, multiset<int> ms, bool isReversed) {
         int y = 0;
         if (ms.size() > 0) {
             y = *(ms.rbegin());
         }
 
-        if (answer.size() == 0) {
-            answer.push_back({x, y});
-            return;
-        }
-        
-        auto prevPoint = answer[answer.size() - 1];
-        int prevX = prevPoint[0], prevY = prevPoint[1];
+        while (answer.size() > 0) {
+            auto prevPoint = answer[answer.size() - 1];
+            int prevX = prevPoint[0], prevY = prevPoint[1];
 
-        if (prevX != x && prevY != y) {
-            answer.push_back({x, y});
-            return;
-        }
-
-        if (prevX == x) {
-            if (y > prevY) {
-                answer.pop_back();                    
+            if (prevX != x && prevY != y) {
                 answer.push_back({x, y});
                 return;
             }
-        }
 
-        if (prevY == y) {
-            if (x < prevX) {
-                answer.pop_back();                    
-                answer.push_back({x, y});
+            if (prevX == x) {
+                bool shouldPop = y > prevY;
+                if (isReversed) {
+                    shouldPop = !shouldPop;
+                }
+                if (shouldPop) {
+                    answer.pop_back();                    
+                } else {
+                    return;
+                }
+            }
+
+            if (prevY == y) {
+                bool shouldPop = x < prevX;
+                if (isReversed) {
+                    shouldPop = !shouldPop;
+                }
+                if (shouldPop) {
+                    answer.pop_back();                    
+                } else {
+                    return;
+                }
             }
         }
+    
+        answer.push_back({x, y});
+        return;
+    }
+};
+
+class WASolution {
+public:
+    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
+        multiset<int> ms;
+        deque<pair<int, int>> dq;
+
+        vector<vector<int>> answer;
+
+        for (auto building: buildings) {
+            int left = building[0], right = building[1], height = building[2];
+
+            while (dq.size() > 0 && left >= dq[0].first) {
+                auto &[prevRight, prevHeight] = dq[0];
+                dq.pop_front();
+
+                ms.erase(prevHeight);
+
+                addToAnswer(answer, prevRight, ms, false);
+            }
+
+            dq.push_back(pair{right, height});
+            ms.insert(height);
+            addToAnswer(answer, left, ms, false);
+        }
+
+        while (dq.size() > 0) {
+            auto &[prevRight, prevHeight] = dq[0];
+            dq.pop_front();
+
+            ms.erase(prevHeight);
+
+            addToAnswer(answer, prevRight, ms, true);
+        }
+
+        return answer;
+    }
+
+    void addToAnswer(vector<vector<int>>& answer, int x, multiset<int> ms, bool isSmallerYBetter) {
+        int y = 0;
+        if (ms.size() > 0) {
+            y = *(ms.rbegin());
+        }
+
+        while (answer.size() > 0) {
+            auto prevPoint = answer[answer.size() - 1];
+            int prevX = prevPoint[0], prevY = prevPoint[1];
+
+            if (prevX != x && prevY != y) {
+                answer.push_back({x, y});
+                return;
+            }
+
+            if (prevX == x) {
+                bool shouldPop;
+                if (isSmallerYBetter) {
+                    shouldPop = y < prevY;
+                } else {
+                    shouldPop = y > prevY;
+                }
+                if (shouldPop) {
+                    answer.pop_back();                    
+                } else {
+                    return;
+                }
+            }
+
+            if (prevY == y) {
+                if (x < prevX) {
+                    answer.pop_back();                    
+                } else {
+                    return;
+                }
+            }
+        }
+    
+        answer.push_back({x, y});
+        return;
     }
 };
 
 int main() {
     Solution soln;
     // vector<vector<int>> buildings = {{2, 9, 10}, {3, 7, 15}, {5, 12, 12}, {15, 20, 10}, {19, 24, 8}};
-    vector<vector<int>> buildings = {{0,2,3},{2,5,3}};
+    // vector<vector<int>> buildings = {{0,2,3},{2,5,3}};
+    // vector<vector<int>> buildings = {{2,9,10},{3,9,9},{4,9,8},{5,9,7}};
+    // vector<vector<int>> buildings = {{0,3,3},{1,5,3},{2,4,3},{3,7,3}};
+    vector<vector<int>> buildings = {{1,2,1},{1,2,2},{1,2,3}};
     vector<vector<int>> answer = soln.getSkyline(buildings);
 
     return 0;
