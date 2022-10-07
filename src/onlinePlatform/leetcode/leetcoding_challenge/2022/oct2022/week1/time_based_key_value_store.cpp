@@ -14,13 +14,44 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class TimeMap {
 public:
     TimeMap() {
-        mapping = map<string, map<int, string>>();
+        mapping = unordered_map<string, map<int, string>>();
     }
-    
+
     void set(string key, string value, int timestamp) {
         mapping[key][timestamp] = value;
     }
-    
+
+    string get(string key, int timestamp) {
+        string NO_VALUE = "";
+        if (mapping.count(key) == 0) {
+            return NO_VALUE;
+        }
+        // auto values = mapping[key];
+        auto it = mapping[key].upper_bound(timestamp);
+        if (it == mapping[key].begin()) {
+            return NO_VALUE;
+        }
+        return prev(it)->second;
+        // it--;
+        // auto [_, value] = *it;
+        // return value;
+    }
+
+private:
+    unordered_map<string, map<int, string>> mapping;
+};
+
+
+class TLETimeMap {
+public:
+    TLETimeMap() {
+        mapping = map<string, map<int, string>>();
+    }
+
+    void set(string key, string value, int timestamp) {
+        mapping[key][timestamp] = value;
+    }
+
     string get(string key, int timestamp) {
         string NO_VALUE = "";
         if (mapping.count(key) == 0) {
@@ -35,7 +66,7 @@ public:
         auto [_, value] = *it;
         return value;
     }
-    
+
 private:
     map<string, map<int, string>> mapping;
 };
@@ -45,11 +76,11 @@ public:
     WATimeMap() {
         mapping = map<string, map<int, string>>();
     }
-    
+
     void set(string key, string value, int timestamp) {
         mapping[key][timestamp] = value;
     }
-    
+
     string get(string key, int timestamp) {
         if (mapping.count(key) == 0) {
             string NO_VALUE = "";
@@ -63,7 +94,7 @@ public:
         auto [_, value] = *it;
         return value;
     }
-    
+
 private:
     map<string, map<int, string>> mapping;
 };
