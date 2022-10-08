@@ -14,6 +14,31 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     int threeSumClosest(vector<int>& nums, int target) {
+        sort(nums.begin(), nums.end());
+        
+        int answer = nums[0] + nums[1] + nums[2];
+        for (int i = 0; i < nums.size(); i++) {
+            for (int j = i + 1; j < nums.size() - 1; j++) {
+                int remainSum = target - nums[i] - nums[j];
+                auto it = lower_bound(nums.begin() + j + 1, nums.end(), remainSum);
+                if (it == nums.end()) {
+                    it--;
+                }
+                
+                long totalSum = nums[i] + nums[j] + *it;
+                if (abs(totalSum - target) < abs(answer - target)) {
+                    answer = totalSum;
+                }
+            }   
+        }
+        
+        return answer;
+    }
+};
+
+class TLESolution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
         vector<int> sortedNums = vector<int>(nums);
         sort(sortedNums.begin(), sortedNums.end());
         
