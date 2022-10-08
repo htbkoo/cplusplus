@@ -18,6 +18,34 @@ public:
         
         int answer = nums[0] + nums[1] + nums[2];
         for (int i = 0; i < nums.size(); i++) {
+            int j = i + 1;
+            int k = nums.size() - 1;
+            while (j < k) {
+                long totalSum = nums[i] + nums[j] + nums[k];
+                if (abs(totalSum - target) < abs(answer - target)) {
+                    answer = totalSum;
+                }
+                if (totalSum > target) {
+                    k--;
+                } else if (totalSum < target) {
+                    j++;
+                } else {
+                    return totalSum;
+                }
+            }
+        }
+        
+        return answer;
+    }
+};
+
+class FirstSolution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        sort(nums.begin(), nums.end());
+        
+        int answer = nums[0] + nums[1] + nums[2];
+        for (int i = 0; i < nums.size(); i++) {
             for (int j = i + 1; j < nums.size() - 1; j++) {
                 int remainSum = target - nums[i] - nums[j];
                 auto it = lower_bound(nums.begin() + j + 1, nums.end(), remainSum);
