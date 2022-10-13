@@ -14,6 +14,25 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     bool increasingTriplet(vector<int>& nums) {
+        int first = numeric_limits<int>::max();        
+        int second = numeric_limits<int>::max();        
+        for (int num: nums) {
+            if (num > second) {
+                return true;
+            } else if (num < first) {
+                first = num;
+            } else if (num < second && num > first) {
+                second = num;
+            }
+        }
+        
+        return false;
+    }
+};
+
+class FirstSolution {
+public:
+    bool increasingTriplet(vector<int>& nums) {
         vector<bool> hasSmallerLeft = vector<bool>(nums.size());
         
         int currMin = numeric_limits<int>::max();        
