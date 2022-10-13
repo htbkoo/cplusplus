@@ -31,6 +31,18 @@ public:
         if (node == nullptr || node->next == nullptr) {
             throw invalid_argument("expected node to have size longer than 1");
         }
+
+        node->val = node->next->val;
+        node->next = node->next->next;
+    }
+};
+
+class FirstSolution {
+public:
+    void deleteNode(ListNode* node) {
+        if (node == nullptr || node->next == nullptr) {
+            throw invalid_argument("expected node to have size longer than 1");
+        }
         
         while (node && node->next && node->next->next) {
             node->val = node->next->val;
