@@ -14,6 +14,15 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     bool checkIfPangram(string sentence) {
+        unordered_set<char> chars(sentence.begin(), sentence.end());
+            
+        return chars.size() == 26;
+    }
+};
+
+class FirstSolution {
+public:
+    bool checkIfPangram(string sentence) {
         unordered_set<char> chars;
         
         for (char ch: sentence) {
