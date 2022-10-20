@@ -14,6 +14,43 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     string intToRoman(int num) {
+
+        vector<pair<int, string>> MAPPINGS = {
+            pair{1000, "M"},
+            pair{900, "CM"},
+            pair{500, "D"},
+            pair{400, "CD"},
+            pair{100, "C"},
+            pair{90, "XC"},
+            pair{50, "L"},
+            pair{40, "XL"},
+            pair{10, "X"},
+            pair{9, "IX"},
+            pair{5, "V"},
+            pair{4, "IV"},
+            pair{1, "I"},             
+        };
+
+        string answer;
+
+
+        while (num > 0) {
+            // TODO: how do we represent num >= 4000?
+            for (auto &[val, part]: MAPPINGS) {
+                if (num >= val) {
+                    answer += part;
+                    num -= val;
+                    break;
+                }
+            }
+        }
+            
+        return answer;
+    }
+};
+class FirstSolution {
+public:
+    string intToRoman(int num) {
         string answer;
         while (num > 0) {
             // TODO: how do we represent num >= 4000?
