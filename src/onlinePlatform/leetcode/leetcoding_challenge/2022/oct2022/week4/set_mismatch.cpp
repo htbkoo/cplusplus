@@ -14,6 +14,50 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     vector<int> findErrorNums(vector<int>& nums) {
+        int n = nums.size();
+        
+        int totalSum = 0;        
+        for (int num: nums) {
+            totalSum += num;
+        }        
+        int expectedSum = n * (1 + n) / 2;
+        
+        for (int i = 0; i < n; i++) {
+            int num = abs(nums[i]);
+            nums[num - 1] = -nums[num - 1];
+        }
+        
+        vector<int> positives;
+        for (int i = 0; i < n; i++) {
+            int num = nums[i];
+            if (num > 0) {
+                positives.push_back(i + 1);
+            }
+        }    
+        for (int &num: nums) {
+            num = abs(num);
+        }
+        
+        if (positives.size() == 2) {
+            sort(positives.begin(), positives.end());
+            int dup, missing;
+            if (totalSum > expectedSum) {
+                dup = positives[1];
+                missing = positives[0];
+            } else {
+                dup = positives[0];
+                missing = positives[1];
+            }                
+            return vector<int>{dup, missing};            
+        } else {
+            throw invalid_argument("bug"); 
+        }
+    }
+};
+
+class FirstSolution {
+public:
+    vector<int> findErrorNums(vector<int>& nums) {
         int dup = -1;
         int missing = -1;
         
