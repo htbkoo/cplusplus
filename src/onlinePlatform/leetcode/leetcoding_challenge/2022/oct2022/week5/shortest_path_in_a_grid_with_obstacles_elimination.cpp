@@ -20,9 +20,6 @@ struct State {
     State(int y, int x, int remainK, int numStep): y(y), x(x), remainK(remainK), numStep(numStep) {}
 };
 
-int START_Y = 0;
-int START_X = 0;
-
 class Solution {
 public:
     int shortestPath(vector<vector<int>>& grid, int k) {
@@ -42,7 +39,7 @@ public:
         int TARGET_Y = HEIGHT - 1;
         int TARGET_X = WIDTH - 1;
         
-        initBestSteps(k);
+        initBestSteps(HEIGHT, WIDTH, k);
         
         queue<State> states = queue<State>({State(START_Y, START_X, k, 0)});
         
@@ -69,13 +66,12 @@ public:
                         newRemainK--;
                     }
                     
-                    pair<int, int> newCoords = pair{ny, nx};
-                    int prevBestStep = getBestStep(newRemainK, newCoords);
-                    if (newNumStep >= prevBestStep) {
+                    int prevBestRemainK = bestRemainK[ny][nx];
+                    if (newRemainK <= prevBestRemainK) {
                         continue;
                     }
-                    
-                    setBestStep(newRemainK, newCoords, newNumStep);
+                    bestRemainK[ny][nx] = newRemainK;
+
                     states.push(State(ny, nx, newRemainK, newNumStep));
                 }
             }
@@ -85,36 +81,18 @@ public:
     }
     
 private:
-    unordered_map<int, map<pair<int, int>, int>> bestSteps;
-    
-    void initBestSteps(int k) {
-        for (int remainK = 0; remainK <= k; remainK++) {
-            bestSteps[remainK] = {};
-            bestSteps[remainK][pair{START_Y, START_X}] = 0;
-        }
-    }
-    
-    int getBestStep(int remainK, pair<int, int> coords) {
-        return numeric_limits<int>::max();
+    vector<vector<int>> bestRemainK;    
+    int START_Y = 0;
+    int START_X = 0;
 
-        if (bestSteps.count(remainK) == 0) {
-            return numeric_limits<int>::max();
+    void initBestSteps(int HEIGHT, int WIDTH, int k) {
+        for (int y = 0; y < HEIGHT; y++) {
+            bestRemainK.push_back(vector<int>());
+            for (int x = 0; x < WIDTH; x++) {
+                bestRemainK[y].push_back(-1);
+            }
         }
-            
-        if (bestSteps[remainK].count(coords) == 0) {
-            return numeric_limits<int>::max();
-        }
-        
-        return bestSteps[remainK][coords];
-    }
-    
-    void setBestStep(int remainK, pair<int, int> coords, int bestStep) {
-        if (bestSteps.count(remainK) == 0) {
-            bestSteps[remainK] = {};
-        }
-        
-        bestSteps[remainK][coords] = bestStep;
-    }
+    }  
 };
 
 int main() {
