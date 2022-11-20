@@ -12,6 +12,7 @@
 #include <iostream> // includes cin to read from stdin and cout to write to stdout
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
+
 class Solution {
 public:
     int calculate(string s) {
@@ -75,13 +76,15 @@ private:
 //                     prev.push_back(newNum);
                     
 //                     break;
-                case '(':
+                case '(': {
                     i++;
                     int result = _calculate(s, i);
                     prevNums.push_back(result * currSign);
                     break;
-                case ')':
-                    return sum(prevNums);
+                }
+                case ')': {
+                    return getSumWithCurr(prevNums, curr, currSign); 
+                }
                 default:
                     if (isDigit(ch)) {
                         curr.push_back(ch);
@@ -92,13 +95,17 @@ private:
             
             i++;
         }
-                            
+
+        return getSumWithCurr(prevNums, curr, currSign); 
+    }
+    
+    int getSumWithCurr(vector<int>& v, vector<char>& curr, int currSign) {
+        int currNum = 0;
         if (!curr.empty()) {
-            int currNum = asInt(curr);
-            prevNums.push_back(currNum * currSign);
+            currNum = asInt(curr);            
         }
         
-        return sum(prevNums);
+        return currNum * currSign + sum(v);
     }
     
     int sum(vector<int>& v) {
@@ -121,3 +128,8 @@ private:
         return '0' <= ch && ch <= '9';
     }
 };
+
+int main() {
+    Solution soln;
+    cout << soln.calculate("(1+(4+5+2)-3)+(6+8)") << endl;
+}
