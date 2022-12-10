@@ -34,6 +34,38 @@ struct TreeNode {
 class Solution {
 public:
     int maxProduct(TreeNode* root) {
+        totalSum = findMax(root);
+        answer = numeric_limits<long>::min();
+        findMax(root);
+        
+        int MOD = pow(10, 9) + 7;
+        return answer % MOD;
+    }
+    
+private:
+    long totalSum = 0;
+    long answer = 0;
+    long findMax(TreeNode* node) {
+        if (node == nullptr) {
+            return 0;
+        } else {
+            long leftSum = findMax(node->left);
+            answer = max(answer, getProduct(leftSum));
+            long rightSum = findMax(node->right);
+            answer = max(answer, getProduct(rightSum));
+            
+            return ((long) node->val) + leftSum + rightSum;
+        }
+    }
+    
+    long getProduct(long first) {
+        return first * (totalSum - first);
+    }
+};
+
+class FirstSolution {
+public:
+    int maxProduct(TreeNode* root) {
         totalSum = getTotalSum(root);
         findMax(root);
         
