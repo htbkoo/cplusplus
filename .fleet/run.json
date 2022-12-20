@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "type": "command",
+            "name": "run",
+            "dependsOn": ["build"],
+            "program": "$FILE$.exe",
+        },
+        {
+            "type": "command",
+            "name": "build",
+            "program": "/usr/bin/g++",
+            "args": ["$FILE$", "-std=c++17", "-pthread", "-O2", "-o", "$FILE$.exe"],
+
+        },
+    ]
+}
