@@ -20,6 +20,72 @@ public:
     
 private:
     const int MOD = 1000000007;
+    const vector<pair<int, int>> SAME_CONFIGS = {
+        pair{1, 1},
+        pair{2, 2},
+        pair{2, 1},
+        pair{1, 2}
+    };
+    const vector<pair<int, int>> AT_MOST_ONE_CONFIGS = {
+        pair{2, 1},
+        pair{1, 2}
+    };
+    const vector<pair<int, int>> DIFF_CONFIGS = {
+        pair{2, 0},
+        pair{0, 2}
+    };
+    const string SEPARATOR = "_";
+    unordered_map<string, long> cache;
+    
+    long count(int n, int up, int down) {
+        if (up == n && down == n) {
+            return 1;
+        }
+        if (up > n || down >= n) {
+            return 0;
+        }
+        string key = getKey(up, down);
+        if (cache.count(key) > 0) {
+            return cache[key];
+        }
+        cache[key] = 0;
+        if (up == down) {
+            for (auto& [du, dd]: SAME_CONFIGS) {
+                cache[key] = (cache[key] + count(n, up + du, down + dd)) % MOD;
+            }
+        }
+
+        if (up > down) {
+            cache[key] = (cache[key] + count(n, up, down + 2)) % MOD;
+            if (up - down == 1) {
+                cache[key] = (cache[key] + count(n, up + 1, down + 2)) % MOD;
+            }
+        }
+
+        if (down > up) {
+            cache[key] = (cache[key] + count(n, up + 2, down)) % MOD;            
+            if (down - up == 1) {
+                cache[key] = (cache[key] + count(n, up + 2, down + 1)) % MOD;
+            }
+        }
+
+        return cache[key] % MOD;
+    }
+    
+    string getKey(int up, int down) {
+        return to_string(up) + SEPARATOR + to_string(down);
+    }
+};
+
+class WASolution {
+public:
+    int numTilings(int n) {
+        cache = unordered_map<string, long>();
+        return count(n, 0, 0);
+    }
+    
+private:
+    const int MOD = 1000000007;
     const vector<pair<int, int>> CONFIGS = {
         pair{1, 1},
         pair{2, 0},
@@ -55,5 +121,6 @@ private:
 
 int main() {
     Solution soln;
-    cout << soln.numTilings(2) << endl;
+    // cout << soln.numTilings(2) << endl;
+    cout << soln.numTilings(5) << endl;
 }
