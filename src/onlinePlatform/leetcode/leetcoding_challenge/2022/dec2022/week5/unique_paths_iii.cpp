@@ -20,7 +20,8 @@ public:
         allVisitedBitMask = getAllVisitedBitMask(grid);
         
         auto [startY, startX] = getStartingCoords(grid);        
-        dfs(grid, startY, startX, 0);
+        int initVisitedBitMask = getInitVisitedBitMask(grid);
+        dfs(grid, startY, startX, initVisitedBitMask);
         
         return answer;
     }
@@ -61,6 +62,7 @@ private:
         if (isVisited(y, x, visited)) {
             return;
         }
+        visited = withVisit(y, x, visited);        
         if (grid[y][x] == ENDING_SQUARE) {
             if (isAllVisited(visited)) {
                 answer++;
@@ -68,12 +70,11 @@ private:
             return;
         }
         
-        int newVisited = withVisit(y, x, visited);        
         // for (auto& [dy, dx]: DIRECTIONS) {
         for (auto [dy, dx]: DIRECTIONS) {
             int ny = y + dy;
             int nx = x + dx;
-            dfs(grid, ny, nx, newVisited);
+            dfs(grid, ny, nx, visited);
         }
     }
     
@@ -93,17 +94,21 @@ private:
         return (v & visited) > 0;
     }
     
-    int getAllVisitedBitMask(vector<vector<int>>& grid) {
-        int numNonObstacleSquares = 0;
-        for (auto& row: grid) {
-            for (auto square: row) {
-                if (square != OBSTACLE) {
-                    numNonObstacleSquares++;
+
+    int getInitVisitedBitMask(vector<vector<int>>& grid) {        
+        int bitmask = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (grid[y][x] == OBSTACLE) {
+                    bitmask = withVisit(y, x, bitmask);
                 }
             }
-        }
-        
-        return -1 + (int) pow(2, numNonObstacleSquares);
+        } 
+        return bitmask;
+    }
+    
+    int getAllVisitedBitMask(vector<vector<int>>& grid) {
+        return -1 + (int) pow(2, width * height);
     }
     
     bool isAllVisited(int visited) {
