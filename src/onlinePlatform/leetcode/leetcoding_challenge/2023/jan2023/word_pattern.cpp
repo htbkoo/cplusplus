@@ -42,6 +42,48 @@ public:
     
     vector<string> split(string& s) {
         vector<string> words;
+
+        istringstream iss(s);
+        string word;
+        
+        while (iss >> word) {
+            words.push_back(word);
+        }
+        return words;
+    }
+};
+
+class FirstSolution {
+public:
+    bool wordPattern(string pattern, string s) {
+        unordered_map<char, string> mapping;
+        unordered_map<string, char> reversedMap;
+        
+        vector<string> words = split(s);
+        
+        if (words.size() != pattern.size()) {
+            return false;
+        }
+        
+        for (int i = 0; i < words.size(); i++) {
+            char ch = pattern[i];
+            string word = words[i];
+
+            bool m = mapping.count(ch) > 0 && mapping[ch] != word;
+            bool r = reversedMap.count(word) > 0 && reversedMap[word] != ch;
+
+            if (m || r) {
+                return false;
+            }
+            mapping[ch] = word;
+            reversedMap[word] = ch;
+        }
+        
+        return true;
+    }
+    
+    vector<string> split(string& s) {
+        vector<string> words;
         istringstream iss(s);
         
         while (iss) {
