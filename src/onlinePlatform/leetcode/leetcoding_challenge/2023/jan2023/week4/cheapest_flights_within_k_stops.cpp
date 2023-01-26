@@ -14,6 +14,33 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+        vector<long> minDists = vector<long>(n, numeric_limits<int>::max());
+        minDists[src] = 0;
+        
+        for (int numStops = 0; numStops <= k; numStops++) {
+            vector<long> prevMinDists(minDists);
+            
+            for (auto flight: flights) {
+                int fromCity = flight[0], toCity = flight[1], price = flight[2];
+                
+                minDists[toCity] = min(
+                    minDists[toCity],
+                    prevMinDists[fromCity] + price
+                );
+            }
+        }
+        
+        if (minDists[dst] < numeric_limits<int>::max()) {
+            return (int) minDists[dst];
+        } else {
+            return -1;
+        }
+    }
+};
+
+class TLESolution {
+public:
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
         vector<unordered_map<int, int>> neighbours = vector<unordered_map<int, int>>(n);
         for (auto flight: flights) {
             int fromCity = flight[0], toCity = flight[1], price = flight[2];
