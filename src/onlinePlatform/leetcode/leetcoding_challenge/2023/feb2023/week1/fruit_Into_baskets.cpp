@@ -16,6 +16,46 @@ public:
     int totalFruit(vector<int>& fruits) {
         int MAX_NUM_TYPE_FRUITS = 2;
         
+        unordered_map<int, int> counter;            
+        int left = 0;
+        int answer = 0;
+
+        for (int fruit: fruits) {
+            counter[fruit]++;
+            
+            while (counter.size() > MAX_NUM_TYPE_FRUITS) {
+                int removedFruit = fruits[left];
+                counter[removedFruit]--;
+                if (counter[removedFruit] == 0) {
+                    counter.erase(removedFruit);
+                }
+                
+                left++;
+            }
+            
+            int currCount = sum(counter);            
+            answer = max(answer, currCount);
+        }
+        
+        return answer;
+    }
+    
+private:
+    template <typename Map>
+    int sum(Map const &map) {
+        int answer = 0;
+        for (auto &[key, val]: map) {
+            answer += val;
+        }
+        return answer;
+    }
+};
+
+class FirstSolution {
+public:
+    int totalFruit(vector<int>& fruits) {
+        int MAX_NUM_TYPE_FRUITS = 2;
+        
         unordered_map<int, int> counter;
             
         int answer = 0;
