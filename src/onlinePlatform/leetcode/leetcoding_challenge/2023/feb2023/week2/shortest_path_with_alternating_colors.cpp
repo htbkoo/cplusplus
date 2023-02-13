@@ -111,6 +111,16 @@ public:
     }
 };
 
+template <typename Vector>
+void printVector(Vector &v) {
+    cout << "[";
+    for (auto &item: v) {
+        cout << item << ", ";
+    }
+    cout << "]";
+    cout << endl;
+}
+
 int main() {
     Solution soln;
     int  n = 100;
