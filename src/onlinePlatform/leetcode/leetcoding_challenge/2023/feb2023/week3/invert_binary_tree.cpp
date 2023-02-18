@@ -48,9 +48,9 @@ public:
             root->left = root->right;
             root->right = temp;
             
-            for (auto child: {node->left, node->right}) {
-                if (child)
-            }
+            // for (auto child: {node->left, node->right}) {
+            //     if (child)
+            // }
 
             invertTree(root->left);
             invertTree(root->right);
