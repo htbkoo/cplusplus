@@ -34,6 +34,36 @@ struct TreeNode {
 class Solution {
 public:
     TreeNode* invertTree(TreeNode* root) {
+        if (root == nullptr) {
+            return root;
+        }
+        
+        queue<TreeNode*> q({root});
+        while (q.size() > 0) {
+            TreeNode* node = q.front();
+            q.pop();
+
+            
+            TreeNode* temp = node->left;
+            root->left = root->right;
+            root->right = temp;
+            
+            for (auto child: {node->left, node->right}) {
+                if (child)
+            }
+
+            invertTree(root->left);
+            invertTree(root->right);
+
+        }
+        
+        return root;
+    }
+};
+
+class RecursiveSolution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
         if (root != nullptr) {
             TreeNode* temp = root->left;
             root->left = root->right;
