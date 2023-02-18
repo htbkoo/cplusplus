@@ -33,28 +33,22 @@ struct TreeNode {
  */
 class Solution {
 public:
-    TreeNode* invertTree(TreeNode* root) {
-        if (root == nullptr) {
-            return root;
-        }
-        
+    TreeNode* invertTree(TreeNode* root) {        
         queue<TreeNode*> q({root});
         while (q.size() > 0) {
             TreeNode* node = q.front();
             q.pop();
 
-            
+            if (node == nullptr) {
+                continue;
+            }
+
             TreeNode* temp = node->left;
-            root->left = root->right;
-            root->right = temp;
-            
-            // for (auto child: {node->left, node->right}) {
-            //     if (child)
-            // }
+            node->left = node->right;
+            node->right = temp;
 
-            invertTree(root->left);
-            invertTree(root->right);
-
+            q.push(node->left);
+            q.push(node->right);
         }
         
         return root;
