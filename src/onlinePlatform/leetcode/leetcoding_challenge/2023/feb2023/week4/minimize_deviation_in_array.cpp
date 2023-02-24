@@ -18,28 +18,34 @@ using min_priority_queue = priority_queue<T, vector<T>, greater<T>>;
 class Solution {
 public:
     int minimumDeviation(vector<int>& nums) {
-        unordered_set<long> longs;
+        long maxNum = numeric_limits<long>::min();
+        long minNum = numeric_limits<long>::max();
+        set<pair<long, long>> longs;
         for (int num: nums) {
-            while (num % 2 == 0) {
-                num /= 2;
+            int finalNum = num;
+            while (finalNum % 2 == 0) {
+                finalNum /= 2;
             }
-            longs.insert(num);
+
+            maxNum = max(maxNum, (long) finalNum);
+            minNum = min(minNum, (long) finalNum);
+
+            longs.insert(pair{finalNum, num});
         }
         
-        long maxNum = *max_element(longs.begin(), longs.end());
-        long answer = maxNum - *min_element(longs.begin(), longs.end());
+        long answer = maxNum - minNum;
         
-cout << answer << endl;
+cout << "a: " << answer << " " << minNum << " " << maxNum << endl;
 
-        min_priority_queue<long> pq(longs.begin(), longs.end());
+        min_priority_queue<pair<long, long>> pq(longs.begin(), longs.end());
         
         while (true) {
-            long minNum = pq.top();
+            auto [minNum, minNumRange] = pq.top();
             pq.pop();
 
-cout << minNum << endl;
+cout << "b: " << minNum << " " << minNumRange << endl;
 
-            if (minNum % 2 == 0) {
+            if (minNum % 2 == 0 && minNum >= minNumRange) {
                 break;
             }
 
@@ -48,12 +54,16 @@ cout << minNum << endl;
             }
 
             long newNum = minNum * 2;
+cout << "d: "<< minNum << " " << newNum << " " << maxNum << endl;
             maxNum = max(maxNum, newNum);
 
-            pq.push(newNum);
+            pq.push(pair{newNum, minNumRange});
             
-            long newDiff = maxNum - pq.top();
-            if (newDiff >= answer) {
+            long newDiff = maxNum - pq.top().first;
+
+cout << "c: " << newNum << " " << maxNum << " " << pq.top().first << " " << newDiff << " " << answer << endl;
+
+            if (newDiff > answer) {
                 break;
             } else {
                 answer = newDiff;
@@ -68,7 +78,9 @@ int main() {
     Solution soln;
 
     // vector<int> nums = {2,8,10};
-    vector<int> nums = {399,908,648,357,693,502,331,649,596,698};
+    vector<int> nums = {610,778,846,733,395}; // 236
+    // vector<int> nums = {900,241,842,374,758,39,687,242,912};
+    // vector<int> nums = {399,908,648,357,693,502,331,649,596,698};
     cout << soln.minimumDeviation(nums) << endl;
 
     return 0;
