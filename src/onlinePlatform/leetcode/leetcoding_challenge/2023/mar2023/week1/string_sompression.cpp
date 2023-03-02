@@ -21,7 +21,9 @@ public:
         int write = 0, start = 0;
         for (int i = 0; i < chars.size(); i++) {
             if (chars[i] != chars[start]) {
+                chars[write] = chars[start];
                 write++;
+                
                 int size = i - start;
                 if (size > 1) {
                     string sizeString = to_string(size);
@@ -35,8 +37,8 @@ public:
             }
         }
         
-        // TODO: handle the tail compression
         int size = chars.size() - start;
+        chars[write] = chars[start];
         write++;
         if (size > 1) {
             string sizeString = to_string(size);
