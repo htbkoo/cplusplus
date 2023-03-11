@@ -59,11 +59,11 @@ public:
     
 private:   
     TreeNode* asBST(ListNode* begin, ListNode* end=nullptr) {
-        if (begin == nullptr) {
+        if (begin == nullptr || begin == end) {
             return nullptr;
         }
         
-        if (begin == end) {
+        if (begin->next == end) {
             return new TreeNode(begin->val);
         }
         
