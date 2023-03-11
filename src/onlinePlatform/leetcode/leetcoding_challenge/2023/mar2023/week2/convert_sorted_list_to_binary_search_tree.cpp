@@ -53,6 +53,44 @@ struct TreeNode {
  */
 class Solution {
 public:
+    TreeNode* sortedListToBST(ListNode* head) {                
+        return asBST(head);
+    }
+    
+private:   
+    TreeNode* asBST(ListNode* begin, ListNode* end=nullptr) {
+        if (begin == nullptr) {
+            return nullptr;
+        }
+        
+        if (begin == end) {
+            return new TreeNode(begin->val);
+        }
+        
+        ListNode* mid = findMid(begin, end);
+        
+        TreeNode* left = asBST(begin, mid);
+        TreeNode* right = mid == nullptr ? nullptr : asBST(mid->next, end);
+        TreeNode* BST = new TreeNode(mid->val, left, right);
+        return BST;
+    }
+    
+    
+    ListNode* findMid(ListNode* begin, ListNode* end=nullptr) {
+        ListNode* fast = begin;
+        ListNode* slow = begin;
+        
+        while (fast != end && fast->next != end) {
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        
+        return slow;
+    }
+};
+
+class FirstSolution {
+public:
     TreeNode* sortedListToBST(ListNode* head) {
         vector<int> v = asVector(head);
         
