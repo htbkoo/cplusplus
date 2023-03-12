@@ -34,6 +34,38 @@ public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
         ListNode* dummy = new ListNode();
         
+        auto cmp = [](ListNode* a, ListNode* b) {return a->val > b->val;};
+        priority_queue<ListNode*, vector<ListNode*>, decltype(cmp)> pq(cmp);
+        for (auto head: lists) {
+            if (head != nullptr) {
+                pq.push(head);
+            }
+        }
+        
+        ListNode* curr = dummy;
+        while (pq.size() > 0) {
+            auto node = pq.top();
+            pq.pop();
+            
+            curr->next = node;
+            curr = curr->next;
+            
+            node = node->next;
+            if (node != nullptr) {
+                pq.push(node);
+            }
+        }
+        
+        return dummy->next;
+    }
+};
+
+
+class FirstSolution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        ListNode* dummy = new ListNode();
+        
         auto cmp = [](pair<int, ListNode*>& a, pair<int, ListNode*>& b) {return a.first > b.first;};
         priority_queue<pair<int, ListNode*>, vector<pair<int, ListNode*>>, decltype(cmp)> pq(cmp);
         for (auto head: lists) {
