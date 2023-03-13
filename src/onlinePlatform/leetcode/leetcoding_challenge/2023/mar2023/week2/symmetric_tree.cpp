@@ -38,6 +38,41 @@ public:
             // TOOD: confirm this
             return true;
         }
+        
+        queue<pair<TreeNode*, TreeNode*>> q;
+        q.push(pair{root->left, root->right});
+
+        while (q.size() > 0) {
+            auto [left, right] = q.front();
+            q.pop();
+            
+            if (left == nullptr && right == nullptr) {
+                continue;
+            }
+
+            if (left == nullptr || right == nullptr) {
+                return false;
+            }
+            
+            if (left->val != right->val) {
+                return false;
+            }
+            
+            q.push(pair{left->left, right->right});
+            q.push(pair{left->right, right->left});
+        }
+
+        return true;
+    }
+};
+
+class RecursiveSolution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if (root == nullptr) {
+            // TOOD: confirm this
+            return true;
+        }
 
         return isChildrenSymmetric(root->left, root->right);
     }
