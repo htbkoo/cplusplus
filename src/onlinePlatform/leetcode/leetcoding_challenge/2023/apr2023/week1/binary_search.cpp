@@ -14,6 +14,19 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     int search(vector<int>& nums, int target) {
+        auto it = lower_bound(nums.begin(), nums.end(), target);
+        if (it != nums.end() && *it == target) {
+            return distance(nums.begin(), it);
+        } else {
+            return -1;
+        }
+    }
+};
+
+
+class FirstSolution {
+public:
+    int search(vector<int>& nums, int target) {
         int lo = 0, hi = nums.size() - 1;
         
         while (lo <= hi) {
