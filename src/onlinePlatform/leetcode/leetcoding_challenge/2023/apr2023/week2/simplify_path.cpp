@@ -18,6 +18,76 @@ public:
             return path;
         }
         
+        // TODO: handle relative path
+        bool isAbsolute = true;
+        
+        string DELIMITER = "/";
+        
+        vector<string> directories = split(path, DELIMITER);
+        
+        vector<string> curr;
+        
+        for (auto directory: directories) {
+            if (directory == "." || directory.size() == 0) {
+                // no-op
+            } else if (directory == "..") {
+                if (curr.size() > 0) {
+                    curr.pop_back();
+                }
+            } else {
+                curr.push_back(directory);
+            }
+        }
+        
+        string simplifiedPath = join(curr, DELIMITER);
+        
+        if (isAbsolute) {
+            return DELIMITER + simplifiedPath;
+        } else {
+            return simplifiedPath;
+        }
+    }
+    
+private:
+    vector<string> split(string s, string delimiter) {
+        vector<string> v;
+        
+        // reference: https://stackoverflow.com/a/46931770        
+        size_t pos_start = 0, pos_end, delim_len = delimiter.length();
+        
+        while ((pos_end = s.find(delimiter, pos_start)) != string::npos) {
+            string token = s.substr(pos_start, pos_end - pos_start);
+            pos_start = pos_end + delim_len;
+            v.push_back(token);
+        }
+
+        v.push_back(s.substr(pos_start));
+        
+        return v;
+    }
+    
+    string join(vector<string> ss, string delimiter) {
+        if (ss.size() == 0) {
+            return "";
+        }
+        
+        string s = ss[0];
+        for (int i = 1; i < ss.size(); i++) {
+            s += delimiter;
+            s += ss[i];
+        }
+        
+        return s;
+    }
+};
+
+class FirstSolution {
+public:
+    string simplifyPath(string path) {
+        if (path.size() == 0) {
+            return path;
+        }
+        
         string DELIMITER = "/";
         
         vector<string> directories = split(path, DELIMITER);
