@@ -1,3 +1,6 @@
+// https://codingcompetitions.withgoogle.com/codejam/round/0000000000c95b94/0000000000cad7cf 
+// Colliding Encoding
+
 #include <algorithm>
 #include <vector>
 #include <queue>
@@ -12,32 +15,35 @@
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
 string solve() {
-
     unordered_map<char, char> mapping;
     for (char ch = 'A'; ch <= 'Z'; ++ch) {
         int d;
         cin >> d;
-        mapping[ch] = d + '0';
+        mapping[ch] = d;
     }
 
     int N;
     cin >> N;
 
+    string answer = "NO";
     unordered_set<string> appeared;
     for (int j = 0; j < N; ++j) {
         string word;
         cin >> word;
-        for (int k = 0; k < word.size(); ++k) {
-            word[k] = mapping[word[k]];
-        }
-        if (appeared.count(word) > 0) {
-            return "YES";
-        }
 
-        appeared.insert(word);
+        if (answer == "NO") {
+            for (int k = 0; k < word.size(); ++k) {
+                word[k] = mapping[word[k]];
+            }
+            if (appeared.count(word) > 0) {
+                answer = "YES";
+            }
+
+            appeared.insert(word);
+        }
     } 
 
-    return "NO";
+    return answer;
 }
 
 using namespace std; // since cin and cout are both in namespace std, this saves some text
