@@ -40,6 +40,40 @@ public:
         }
         
         int answer = 0;
+        queue<pair<TreeNode*, long long>> q({pair{root, 0ll}});
+        
+        while (q.size() > 0) {
+            long long baseline = q.front().second;
+            int width = 1 + (q.back().second - baseline);
+            answer = max(answer, width);
+            
+            int count = q.size();
+            for (int i = 0; i < count; ++i) {
+                auto [node, id] = q.front();
+                q.pop();
+                
+                if (node->left != nullptr) {
+                    q.push(pair{node->left, id * 2 - baseline});
+                }
+                if (node->right != nullptr) {
+                    q.push(pair{node->right, id * 2 + 1 - baseline});
+                }
+            }
+        }
+        
+        return answer;
+    }
+};
+
+class WASolution {
+public:
+    int widthOfBinaryTree(TreeNode* root) {
+        if (root == nullptr) {
+            // TODO: confirm this
+            return 0;
+        }
+        
+        int answer = 0;
         queue<pair<TreeNode*, int>> q({pair{root, 0}});
         
         while (q.size() > 0) {
