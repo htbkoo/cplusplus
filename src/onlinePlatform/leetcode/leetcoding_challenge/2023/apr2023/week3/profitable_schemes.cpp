@@ -21,6 +21,44 @@ public:
     int profitableSchemes(int n, int minProfit, vector<int>& group, vector<int>& profit) {
         memset(memo, UNINITIALIZED, sizeof(memo));
         
+        return count(n, minProfit, 0, group, profit) + (minProfit == 0 ? 1 : 0);
+    }
+    
+private:
+    int MOD = pow(10, 9) + 7;
+    int memo[MAX_MEMBER_COUNT + 1][MAX_PROFIT + 1][MAX_CRIME_COUNT + 1];
+    
+    long long count(int remainN, int remainProfit, int i, vector<int>& group, vector<int>& profit) {
+        if (memo[remainN][remainProfit][i] != UNINITIALIZED) {
+            return memo[remainN][remainProfit][i];
+        } 
+        
+        if (i >= group.size() || remainN < 0) {
+            return 0;
+        } 
+        
+        memo[remainN][remainProfit][i] = count(remainN, remainProfit, i + 1, group, profit);
+        
+        if (remainN >= group[i]) {
+            bool isProfitable = profit[i] >= remainProfit;
+            
+            if (isProfitable) {
+                memo[remainN][remainProfit][i]  = (1 + memo[remainN][remainProfit][i] + count(remainN - group[i], 0, i + 1, group, profit)) % MOD;
+            } else {
+                memo[remainN][remainProfit][i]  = (memo[remainN][remainProfit][i] + count(remainN - group[i], remainProfit - profit[i], i + 1, group, profit)) % MOD;
+            }
+            
+        }
+        
+        return memo[remainN][remainProfit][i] ;
+    }
+};
+
+class FirstSolution {
+public:
+    int profitableSchemes(int n, int minProfit, vector<int>& group, vector<int>& profit) {
+        memset(memo, UNINITIALIZED, sizeof(memo));
+        
         return count(n, minProfit, 0, group, profit);
     }
     
