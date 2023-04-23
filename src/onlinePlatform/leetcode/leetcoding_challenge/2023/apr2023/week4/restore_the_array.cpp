@@ -9,6 +9,7 @@
 #include <iterator>
 #include <sstream>
 #include <iostream> // includes cin to read from stdin and cout to write to stdout
+#include <cstring> // for memset
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
 class Solution {
@@ -20,6 +21,8 @@ public:
         int kSize = to_string(k).size();
         
         int numWays[kSize+1];
+        memset(numWays, 0, sizeof(numWays));
+
         numWays[s.size() % (kSize + 1)] = 1;
         
         for (int start = s.size() - 1; start >= 0; --start) {
@@ -35,9 +38,18 @@ public:
                     break;
                 }
                 numWays[start % (kSize + 1)] = (numWays[start % (kSize + 1)] + numWays[(i + 1) % (kSize + 1)]) % MOD;
+                i++;
             }
         }
         
         return numWays[0];
     }
 };
+
+int main() {
+    Solution soln;
+
+    cout << soln.numberOfArrays("1317", 2000) << endl;
+
+    return 0;
+}
