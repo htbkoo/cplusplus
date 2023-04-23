@@ -26,11 +26,12 @@ public:
         numWays[s.size() % (kSize + 1)] = 1;
         
         for (int start = s.size() - 1; start >= 0; --start) {
+            numWays[start % (kSize + 1)] = 0;
             if (s[start] == '0') {
                 continue;
             }
             
-            int num = 0;
+            long num = 0;
             int i = start;
             while (i < s.size()) {
                 num = num * 10 + (s[i] - ZERO_CHAR_CODE);
