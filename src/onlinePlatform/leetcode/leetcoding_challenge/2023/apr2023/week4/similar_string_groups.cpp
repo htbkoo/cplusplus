@@ -143,7 +143,8 @@ private:
 int main() {
     Solution soln;
     // vector<string> strs = {"koqnn", "knnqo", "oqnk", "nqkon"};
-    vector<string> strs = {"koqnn","knnqo","noqnk","nqkon"};
+    // vector<string> strs = {"koqnn","knnqo","noqnk","nqkon"};
+    vector<string> strs = {"ajdidocuyh","djdyaohuic","ddjyhuicoa","djdhaoyuic","ddjoiuycha","ddhoiuycja","ajdydocuih","ddjiouycha","ajdydohuic","ddjyouicha"};
     cout << soln.numSimilarGroups(strs) << endl;
     return 0;
 }
