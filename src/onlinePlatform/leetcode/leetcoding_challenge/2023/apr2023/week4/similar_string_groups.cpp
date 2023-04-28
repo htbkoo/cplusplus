@@ -16,7 +16,7 @@ const int MAX_NUM_WORDS = 300;
 
 class Solution {
 public:
-    int numSimilarGroups(vector<string>& strs) {
+    int numSimilarGroups(vector<string>& strs) {        
         mapping = unordered_map<string, int>();
         for (int i = 0; i < strs.size(); ++i) {
             parents[i] = i;
@@ -25,6 +25,7 @@ public:
                 
         for (int i = 0; i < strs.size(); ++i) {
             string word = strs[i];
+            unionSet(i, mapping[word]);
 
             for (int a = 0; a < word.size(); a++) {
                 for (int b = a + 1; b < word.size(); b++) {
@@ -39,7 +40,7 @@ public:
         
         unordered_set<int> groups;
         for (int i = 0; i < strs.size(); ++i) {
-            groups.insert(parents[i]);
+            groups.insert(find(parents[i]));
         }
         
         return groups.size();
