@@ -139,3 +139,11 @@ private:
         return false;
     }
 };
+
+int main() {
+    Solution soln;
+    // vector<string> strs = {"koqnn", "knnqo", "oqnk", "nqkon"};
+    vector<string> strs = {"koqnn","knnqo","noqnk","nqkon"};
+    cout << soln.numSimilarGroups(strs) << endl;
+    return 0;
+}
