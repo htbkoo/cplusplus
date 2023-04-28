@@ -17,6 +17,68 @@ const int MAX_NUM_WORDS = 300;
 class Solution {
 public:
     int numSimilarGroups(vector<string>& strs) {
+        mapping = unordered_map<string, int>();
+        for (int i = 0; i < strs.size(); ++i) {
+            parents[i] = i;
+            mapping[strs[i]] = i;
+        }
+                
+        for (int i = 0; i < strs.size(); ++i) {
+            string word = strs[i];
+
+            for (int a = 0; a < word.size(); a++) {
+                for (int b = a + 1; b < word.size(); b++) {
+                    swapChar(word, a, b);
+                    if (mapping.count(word) > 0) {
+                        unionSet(i, mapping[word]);
+                    }
+                    swapChar(word, a, b);
+                }   
+            }
+        }
+        
+        unordered_set<int> groups;
+        for (int i = 0; i < strs.size(); ++i) {
+            groups.insert(parents[i]);
+        }
+        
+        return groups.size();
+    }
+    
+private:
+    int parents[MAX_NUM_WORDS + 1];
+    unordered_map<string, int> mapping;
+    
+    int find(int x) {
+        if (parents[x] != x) {
+            parents[x] = find(parents[x]);
+        }
+        return parents[x];
+    }
+    
+    void unionSet(int x, int y) {
+        // path compression
+        x = find(x);
+        y = find(y);
+        
+        if (x == y) {
+            return;
+        }
+        
+        // TODO: add union by size if needed
+        parents[y] = x;
+    }
+    
+    void swapChar(string& word, int a, int b) {
+        char temp = word[a];
+        word[a] = word[b];
+        word[b] = temp;
+    }
+};
+
+class WASolution {
+public:
+    int numSimilarGroups(vector<string>& strs) {
         for (int i = 0; i < strs.size(); ++i) {
             parents[i] = i;
         }
@@ -69,6 +131,8 @@ private:
     
     unordered_set<string> buildSimilarsWords(string word) {
         unordered_set<string> allSimilarWords;
+        
+        allSimilarWords.insert(word);
         
         for (int i = 0; i < word.size(); i++) {
             for (int j = i + 1; j < word.size(); j++) {
