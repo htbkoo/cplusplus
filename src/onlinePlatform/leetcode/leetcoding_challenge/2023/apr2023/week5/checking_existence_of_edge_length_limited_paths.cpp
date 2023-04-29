@@ -27,21 +27,47 @@ public:
         }
         sort(queries.begin(), queries.end(), [](vector<int>& queryA, vector<int>& queryB){return queryA[2] < queryB[2];});
         
-        vector<bool> answers;
+        sort(edgeList.begin(), edgeList.end(), [](vector<int>& edgeA, vector<int>& edgeB){return edgeA[2] < edgeB[2];});
+        
+        int e = 0;
+        
+        vector<bool> answers(queries.size(), false);        
+        for (auto query: queries) {
+            int p = query[0], q = query[1], limit = query[2], idx = query[3];
+            
+            while (e < edgeList.size()) {
+                auto edge = edgeList[e];
+                int u = edge[0], v = edge[1], dis = edge[2];                
+                if (dis >= limit) {
+                    break;
+                }
+                
+                unionSet(u, v);
+                
+                e++;
+            }
+            
+            answers[idx] = find(p) == find(q);
+        }        
         return answers;
     }
     
 private:
     int parents[MAX_NUM_NODES + 1];
+    
+    int find(int x) {
+        if (parents[x] != x) {
+            parents[x] = find(parents[x]);
+        }
+        return parents[x];
+    }
+    
+    void unionSet(int x, int y) {
+        x = find(x);
+        y = find(y);
+        if (x == y) {
+            return;
+        }
+        parents[y] = x;
+    }
 };
-
-int main() {
-    Solution soln;
-    int n = 5;
-    vector<vector<int>> edgeList = {{0,1,10},{1,2,5},{2,3,9},{3,4,13}};
-    vector<vector<int>> queries = {{0,4,14},{1,4,13}};
-
-    auto answers = soln.distanceLimitedPathsExist(n, edgeList, queries);
-
-    return 0;
-}
