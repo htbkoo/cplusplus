@@ -38,8 +38,8 @@ public:
         for (int edgeType = 1; edgeType <= 2; edgeType++) {
             vector<int> tempParents(parents.begin(), parents.end());
             vector<int> tempSizes(sizes.begin(), sizes.end());
-            answer += countNumRemovableEdgesAndUpdateDisjointSet(parents, sizes, edgesByType[edgeType]);
-            if (!isFullyTraversable(parents)) {
+            answer += countNumRemovableEdgesAndUpdateDisjointSet(tempParents, tempSizes, edgesByType[edgeType]);
+            if (!isFullyTraversable(tempParents)) {
                 return NOT_FULLY_TRAVERSABLE;
             }
         }
@@ -118,7 +118,26 @@ public:
             }
         }
         
-        
-        
+        return -1;
     }
 };
+
+template <typename V>
+void printVector(V v) {
+    cout << "[";
+    for (auto item: v) {
+        cout << item << ", ";
+    }
+    cout << "]";
+    cout << endl;
+}
+
+int main() {
+    Solution soln;
+    int n = 4;
+    vector<vector<int>> edges = {{3,1,2},{3,2,3},{1,1,3},{1,2,4},{1,1,2},{2,3,4}};
+
+    cout << soln.maxNumEdgesToRemove(n, edges) << endl;
+
+    return 0;
+}
