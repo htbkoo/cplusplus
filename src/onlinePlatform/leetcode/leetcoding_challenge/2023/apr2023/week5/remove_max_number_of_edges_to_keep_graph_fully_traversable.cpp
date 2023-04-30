@@ -12,6 +12,15 @@
 #include <cstring> // for memset
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
+template <typename V>
+void printVector(V v) {
+    cout << "[";
+    for (auto item: v) {
+        cout << item << ", ";
+    }
+    cout << "]";
+    cout << endl;
+}
 class Solution {
 public:
     int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
@@ -88,7 +97,7 @@ private:
         unordered_set<int> s;
         
         for (int i = 1; i < parents.size(); i++) {
-            s.insert(parents[i]);
+            s.insert(find(parents, i));
         }
         
         return s.size() == 1;
@@ -122,20 +131,11 @@ public:
     }
 };
 
-template <typename V>
-void printVector(V v) {
-    cout << "[";
-    for (auto item: v) {
-        cout << item << ", ";
-    }
-    cout << "]";
-    cout << endl;
-}
-
 int main() {
     Solution soln;
     int n = 4;
-    vector<vector<int>> edges = {{3,1,2},{3,2,3},{1,1,3},{1,2,4},{1,1,2},{2,3,4}};
+    // vector<vector<int>> edges = {{3,1,2},{3,2,3},{1,1,3},{1,2,4},{1,1,2},{2,3,4}};
+    vector<vector<int>> edges = {{3,1,2}, {3,3,4}, {1,1,3},{2,2,4}};
 
     cout << soln.maxNumEdgesToRemove(n, edges) << endl;
 
