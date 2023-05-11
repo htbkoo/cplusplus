@@ -9,6 +9,7 @@
 #include <iterator>
 #include <sstream>
 #include <iostream> // includes cin to read from stdin and cout to write to stdout
+#include <cstring> // for memset
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
 const int MAX_NUMS_LENGTH = 500;
@@ -52,7 +53,8 @@ private:
         int num = nums1[i];
         auto it = upper_bound(positions[num].begin(), positions[num].end(), j);
         if (it != positions[num].end()) {
-            int newJ = distance(positions[num].begin(), it);
+            int idx = distance(positions[num].begin(), it);
+            int newJ = positions[num][idx];
             memo[i][j] = max(
                 memo[i][j],
                 1 + findMax(nums1, nums2, positions, i + 1, newJ)
