@@ -51,10 +51,10 @@ private:
         );
         
         int num = nums1[i];
-        auto it = upper_bound(positions[num].begin(), positions[num].end(), j);
+        auto it = lower_bound(positions[num].begin(), positions[num].end(), j);
         if (it != positions[num].end()) {
             int idx = distance(positions[num].begin(), it);
-            int newJ = positions[num][idx];
+            int newJ = positions[num][idx] + 1;
             memo[i][j] = max(
                 memo[i][j],
                 1 + findMax(nums1, nums2, positions, i + 1, newJ)
