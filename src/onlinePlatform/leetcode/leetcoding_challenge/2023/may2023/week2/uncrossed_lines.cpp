@@ -62,3 +62,12 @@ private:
         return memo[i][j];
     }
 };
+
+int main() {
+    Solution soln;
+    vector<int> nums1 = {2,5,1,2,5}, nums2 = {10,5,2,1,5,2};
+
+    cout << soln.maxUncrossedLines(nums1, nums2) << endl;
+
+    return 0;
+}
