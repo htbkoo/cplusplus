@@ -31,34 +31,75 @@ struct ListNode {
  */
 class Solution {
 public:
-    ListNode* swapNodes(ListNode* head, int k) {
-        ListNode* dummy = new ListNode(0, head);
+    int pairSum(ListNode* head) {
+        // TODO: clarify: what if head is nullptr / odd size?
         
-        ListNode* fast = dummy;
-        ListNode* slow = dummy;
-        for (int i = 0; i < k; i++) {
-            // TODO: validate input, e.g. what if fast is nullptr?
-            fast = fast->next;
-        }
-        
+        // improved: O(n) space + O(1) time, find middle -> reverse second half -> find max sum -> restore
+        ListNode* fast = head;
+        ListNode* slow = head;
         while (fast != nullptr && fast->next != nullptr) {
-            fast = fast->next;
+            fast = fast->next->next;
             slow = slow->next;
         }
         
-        ListNode* first = dummy;
-        for (int i = 0; i < k - 1; i++) {
+        ListNode* tail = reverseList(slow);
+        
+        ListNode* first = head;
+        ListNode* second = tail;
+        
+        int answer = first->val + second->val;
+        while (first != nullptr && second != nullptr) {
+            answer = max(answer, first->val + second->val);
             first = first->next;
+            second = second->next;
         }
         
-        int temp = slow->next->val;
-        slow->next->val = first->next->val;
-        first->next->val = temp;
+        reverseList(tail);
         
-//         ListNode* temp = slow->next;
-//         slow->next = first->next;
-//         first->next = temp;
+        return answer;
+    }
+    
+private:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = nullptr;
+        ListNode* curr = head;
         
-        return dummy->next;
+        while (curr != nullptr) {
+            ListNode* nextNode = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = nextNode;
+        }
+        
+        return prev;
+    }
+};
+
+class FirstSolution {
+public:
+    int pairSum(ListNode* head) {
+        // TODO: clarify: what if head is nullptr / odd size?
+        
+        // naive: O(n) space + O(n) time, store into a list
+        vector<int> nums;
+        while (head != nullptr) {
+            nums.push_back(head->val);
+            head = head->next;
+        }
+        
+        // TODO: confirm we don't need long
+        int answer = nums[0] + nums[nums.size() - 1];
+        for (int i = 1; ;i++) {
+            int twinIdx = nums.size() - i - 1;
+            if (i >= twinIdx) {
+                break;
+            }
+            answer = max(
+                answer,
+                nums[i] + nums[twinIdx]
+            );
+        }
+        
+        return answer;
     }
 };
