@@ -11,7 +11,40 @@
 #include <iostream> // includes cin to read from stdin and cout to write to stdout
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
+template <typename V>
+void printVector(V v) {
+    for (auto i: v) {
+        cout << i << " ";
+    }
+    cout << endl;
+    
+}
+
 class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int, int> counter;
+        for (auto num: nums) {
+            counter[num]++;
+        }
+
+        auto cmp = [&](int left, int right) { return counter[left] > counter[right]; };
+        vector<int> answer;
+        for (auto& [key, count]: counter) {
+            answer.push_back(key);
+            push_heap(answer.begin(), answer.end(), cmp);
+
+            if (answer.size() > k) {
+                pop_heap(answer.begin(), answer.end(), cmp);
+                answer.pop_back();
+            }
+        }
+
+        return answer;
+    }
+};
+
+class PQSolution {
 public:
     vector<int> topKFrequent(vector<int>& nums, int k) {
         unordered_map<int, int> counter;
@@ -39,5 +72,15 @@ public:
         // no this does not exist, https://stackoverflow.com/questions/40709286/c-how-to-copy-elements-from-stdpriority-queue-to-stdvector
         // return vector<int>(elements.begin(), elements.end());
     }
-    
 };
+
+int main() {
+    Solution soln;
+
+    vector<int> nums{1,1,1,2,2,3};
+    int k = 2;
+
+    printVector(soln.topKFrequent(nums, k));
+
+    return 0;
+}
