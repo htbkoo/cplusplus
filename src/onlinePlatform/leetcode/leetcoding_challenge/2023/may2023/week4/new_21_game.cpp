@@ -14,6 +14,47 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     double new21Game(int n, int k, int maxPts) {
+        if (k == 0) {
+            return 1.0;
+        }
+        
+        vector<double> prob(n + 1, 0.0);
+        prob[0] = 1.0;
+
+        queue<pair<int, double>> q({pair{0, prob[0] / (double) maxPts}});
+        
+        double answer = 0.0;
+        double curr = prob[0] / (double) maxPts;
+        for (int i = 1; i <= n; i++) {
+            if ((q.size() > 0) && (i > (q.front().first + maxPts))) {
+                auto [idx, p] = q.front();
+                curr -= p;
+                q.pop();
+            }
+            
+            prob[i] = curr;
+            
+            if (i >= k) {
+                answer += prob[i];
+            } else {
+                double newP = prob[i] / (double) maxPts;
+                curr += newP;
+                q.push(pair{i, newP});
+            }
+        }
+        
+        return answer;
+    }
+};
+
+// DP, time = O(n*maxPts)
+class TLESolution {
+public:
+    double new21Game(int n, int k, int maxPts) {
+        if (k == 0) {
+            return 1.0;
+        }
+        
         vector<double> prob(n + 1, 0.0);
         
         prob[0] = 1.0;
@@ -25,8 +66,6 @@ public:
                 prob[i] += prob[j] / (double) maxPts;
             }
             
-            cout << i << " " << prob[i] << endl;
-
             if (i >= k) {
                 answer += prob[i];
             }
