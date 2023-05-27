@@ -46,10 +46,10 @@ private:
         if (memo[i][playerId] == UNINITIALIZED) {
             if (sign > 0) {
                 // to maximize the result
-                memo[i][playerId] = numeric_limits<int>::min();
-                long curr = 0;
+                long curr = stoneValue[i];
+                memo[i][playerId] = curr + findResult(stoneValue, i + 1, -sign);
 
-                for (int x = MIN_TAKE; x <= MAX_TAKE; ++x) {
+                for (int x = MIN_TAKE + 1; x <= MAX_TAKE && (i - 1 + x) < stoneValue.size(); ++x) {
                     curr += stoneValue[i - 1 + x];
                     memo[i][playerId] = max(
                         memo[i][playerId],
@@ -58,10 +58,10 @@ private:
                 }
             } else {            
                 // to minimize the result
-                memo[i][playerId] = numeric_limits<int>::max();
-                long curr = 0;
+                long curr = stoneValue[i];
+                memo[i][playerId] = -curr + findResult(stoneValue, i + 1, -sign);
 
-                for (int x = MIN_TAKE; x <= MAX_TAKE; ++x) {
+                for (int x = MIN_TAKE + 1; x <= MAX_TAKE && (i - 1 + x) < stoneValue.size(); ++x) {
                     curr += stoneValue[i - 1 + x];
                     memo[i][playerId] = min(
                         memo[i][playerId],
@@ -78,9 +78,9 @@ private:
 int main() {
     Solution soln;
 
-    // vector<int> values = {1,2,3,7};
+    vector<int> values = {1,2,3,7};
     // vector<int> values = {1,2,3,-9};
-    vector<int> values = {1,2,3,6};
+    // vector<int> values = {1,2,3,6};
 
     cout << soln.stoneGameIII(values) << endl;
 
