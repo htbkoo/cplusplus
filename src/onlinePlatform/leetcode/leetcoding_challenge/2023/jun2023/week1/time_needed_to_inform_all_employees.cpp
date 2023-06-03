@@ -26,6 +26,39 @@ public:
         int answer = 0;
         vector<int> time = vector<int>(manager.size(), numeric_limits<int>::max());
         
+        queue<int> candidates({headID});
+        time[headID] = 0;
+        
+        while (candidates.size() > 0) {
+            int c = candidates.front();
+            candidates.pop();
+            
+            for (auto s: subordinates[c]) {
+                int newTime = time[c] + informTime[c];
+                time[s] = min(time[s], newTime);
+                candidates.push(s);
+            }
+        }
+            
+        return *max_element(time.begin(), time.end());
+    }
+};
+
+class PQSolution {
+public:
+    int numOfMinutes(int n, int headID, vector<int>& manager, vector<int>& informTime) {
+        vector<unordered_set<int>> subordinates = vector<unordered_set<int>>(manager.size());
+        for (int i = 0; i < manager.size(); ++i) {
+            if (i == headID) {
+                continue;
+            }
+            int m = manager[i];
+            subordinates[m].insert(i);
+        }
+        
+        int answer = 0;
+        vector<int> time = vector<int>(manager.size(), numeric_limits<int>::max());
+        
         auto cmp = [&](int a, int b) { return time[a] < time[b]; };
         
         unordered_set<int> visited;
@@ -45,8 +78,8 @@ public:
             
             for (auto s: subordinates[c]) {
                 int newTime = time[c] + informTime[c];
-                if (newTime < informTime[s]) {
-                    informTime[s] = newTime;
+                if (newTime < time[s]) {
+                    time[s] = newTime;
                     
                     candidates.push_back(s);
                     push_heap(candidates.begin(), candidates.end(), cmp);
