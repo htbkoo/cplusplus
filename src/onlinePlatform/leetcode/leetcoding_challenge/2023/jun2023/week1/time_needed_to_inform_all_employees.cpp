@@ -11,7 +11,37 @@
 #include <iostream> // includes cin to read from stdin and cout to write to stdout
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
+const int UNINITIALIZED = -1;
+
 class Solution {
+public:
+    int numOfMinutes(int n, int headID, vector<int>& manager, vector<int>& informTime) {
+        memo = vector<int>(n, UNINITIALIZED);
+        
+        int answer = 0;
+        for (int i = 0; i < n; ++i) {
+            answer = max(answer, find(i, headID, manager, informTime));
+        }
+        return answer;
+    }
+    
+private:
+    vector<int> memo;
+    
+    int find(int i, int headID, vector<int>& manager, vector<int>& informTime) {
+        if (i == headID) {
+            return 0;
+        }
+        if (memo[i] == UNINITIALIZED) {
+            int m = manager[i];
+            memo[i] = informTime[m] + find(m, headID, manager, informTime);
+        }
+        
+        return memo[i];
+    }
+};
+
+class FirstSolution {
 public:
     int numOfMinutes(int n, int headID, vector<int>& manager, vector<int>& informTime) {
         vector<unordered_set<int>> subordinates = vector<unordered_set<int>>(manager.size());
