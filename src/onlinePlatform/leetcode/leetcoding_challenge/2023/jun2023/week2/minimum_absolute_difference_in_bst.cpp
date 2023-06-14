@@ -40,6 +40,41 @@ public:
         if (root->left == nullptr && root->right == nullptr) {
             throw invalid_argument("tree has only one node");
         }
+        
+        answer = numeric_limits<int>::max();
+        findMinDiff(root, numeric_limits<int>::max() / 2);
+        return answer;
+    }
+    
+private:
+    int answer;
+    
+    int findMinDiff(TreeNode* root, int prev) {
+        answer = min(answer, abs(prev - root->val));
+        
+        if (root->left != nullptr) {
+            int leftMax = findMinDiff(root->left, prev);
+            answer = min(answer, abs(leftMax - root->val));
+        }
+        
+        if (root->right != nullptr) {
+            return findMinDiff(root->right, root->val);
+        } else {
+            return root->val;
+        }
+        
+    }
+};
+
+class FirstSolution {
+public:
+    int getMinimumDifference(TreeNode* root) {
+        if (root == nullptr) {
+            throw invalid_argument("tree is empty");
+        }
+        if (root->left == nullptr && root->right == nullptr) {
+            throw invalid_argument("tree has only one node");
+        }
 
         vector<int> v;
         toVector(root, v);
@@ -63,41 +98,6 @@ private:
         toVector(root->left, v);
         v.push_back(root->val);
         toVector(root->right, v);
-    }
-};
-
-class WASolution2 {
-public:
-    int getMinimumDifference(TreeNode* root) {
-        if (root == nullptr) {
-            throw invalid_argument("tree is empty");
-        }
-        if (root->left == nullptr && root->right == nullptr) {
-            throw invalid_argument("tree has only one node");
-        }
-        
-        answer = numeric_limits<int>::max();
-        findMinDiff(root, numeric_limits<int>::max() / 2);
-        return answer;
-    }
-    
-private:
-    int answer;
-    
-    int findMinDiff(TreeNode* root, int prev) {
-        answer = min(answer, abs(prev - root->val));
-        
-        if (root->left != nullptr) {
-            int leftMax = findMinDiff(root->left, root->val);
-            answer = min(answer, abs(leftMax - root->val));
-        }
-        
-        if (root->right != nullptr) {
-            return findMinDiff(root->right, root->val);
-        } else {
-            return root->val;
-        }
-        
     }
 };
 
@@ -134,6 +134,7 @@ private:
         );
     }
 };
+
 int main() {
     Solution soln;
 
