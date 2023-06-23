@@ -20,12 +20,21 @@ public:
         }
         
         unordered_map<int, unordered_map<int, int>> mapping;
+        unordered_map<int, int> counts;
+        counts[nums[0]]++;
         
         int answer = 2;
         
         for (int j = 1; j < nums.size(); ++j) {
+            counts[nums[j]]++;
+            answer = max(answer, counts[nums[j]]);
+
             for (int i = 0; i < j; ++i) {
                 int diff = nums[i] - nums[j];
+                if (diff == 0) {
+                    continue;
+                }
+
                 if (mapping[diff].count(nums[j]) == 0) {
                     mapping[diff][nums[j]] = 0;
                 }
@@ -38,12 +47,39 @@ public:
                 } else {
                     mapping[diff][nums[j]] = 2;
                 }
-                
-                if (mapping[diff][nums[j]] > 6) {
-                // if (nums[j] == 446) {
-                    cout << i << ": " << nums[i] << ", "  << j << ": "  << nums[j] << ", "  << diff << ": "  << diff << ", mapping[diff][nums[i]]="  << mapping[diff][nums[i]] << ", mapping[diff][nums[j]]="  << mapping[diff][nums[j]] << endl;
-                }
 
+                answer = max(answer, mapping[diff][nums[j]]);
+            }
+        }
+        
+        return answer;
+    }
+};
+
+class WASolution {
+public:
+    int longestArithSeqLength(vector<int>& nums) {
+        if (nums.size() < 2) {
+            // TODO: confirm this
+            return nums.size();
+        }
+        
+        unordered_map<int, unordered_map<int, int>> mapping;
+        
+        int answer = 2;
+        
+        for (int j = 1; j < nums.size(); ++j) {
+            for (int i = 0; i < j; ++i) {
+                int diff = nums[i] - nums[j];
+                if (mapping[diff].count(nums[i]) > 0) {
+                    mapping[diff][nums[j]] = max(
+                        mapping[diff][nums[j]],
+                        mapping[diff][nums[i]] + 1
+                    );
+                } else {
+                    mapping[diff][nums[j]] = 2;
+                }
+                
                 answer = max(answer, mapping[diff][nums[j]]);
             }
         }
