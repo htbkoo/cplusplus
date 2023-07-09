@@ -14,6 +14,48 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     int largestVariance(string s) {
+        unordered_map<char, int> counter;
+        for (auto ch: s) {
+            counter[ch]++;
+        }
+        
+        int answer = 0;
+        for (auto [ch1, _]: counter) {
+            for (auto [ch2, remainCh2Count]: counter) {
+                if (ch1 == ch2) {
+                    continue;
+                }
+
+                int diff = 0;
+                bool hasCh2 = false;
+                for (auto ch: s) {
+                    if (ch == ch1) {
+                        diff++;
+                    } else if (ch == ch2) {
+                        diff--;
+                        hasCh2 = true;
+                        remainCh2Count--;
+                        if (diff < 0 && remainCh2Count > 0) {
+                            diff = 0;
+                            hasCh2 = false;                            
+                        }
+                    }
+                    
+                    if (hasCh2) {
+                        answer = max(answer, diff);
+                    }
+                }
+            }
+        }
+        
+        return answer;
+    }
+};
+
+
+class FirstSolution {
+public:
+    int largestVariance(string s) {
         chSet = unordered_set<char>();
         for (auto ch: s) {
             chSet.insert(ch);
