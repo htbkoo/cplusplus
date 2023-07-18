@@ -26,6 +26,14 @@ public:
     }    
 };
 
+void printList(DoublyLinkedListNode* node) {
+    while (node != nullptr) {
+        cout << node->_key << " ";
+        node = node->_next;
+    }
+    cout << endl;
+};
+
 class LRUCache {
 public:
     LRUCache(int capacity) {
@@ -47,6 +55,9 @@ public:
     }
     
     int get(int key) {
+        cout << "get: " << key << endl;
+        printList(head);
+
         if (mapping.count(key) == 0) {
             return -1;
         }
@@ -60,10 +71,16 @@ public:
     }
     
     void put(int key, int value) {
+        cout << "put: " << key << endl;
+        printList(head);
+        
         if (mapping.count(key) == 0) {
             DoublyLinkedListNode* node = new DoublyLinkedListNode(key, value);
 
             moveToTail(node);
+            
+            cout << "after put: " << key << endl;
+            printList(head);
             
             mapping[key] = node;
                         
@@ -76,7 +93,11 @@ public:
                 
                 DoublyLinkedListNode* nextNode = toDiscard->_next;
                 head->_next = nextNode;
-                nextNode->_next = head;
+                nextNode->_prev = head;
+
+                cout << "after discard: " << key << endl;
+                printList(head);
+                
             }
         } else {
             DoublyLinkedListNode* node = mapping[key];
@@ -108,6 +129,23 @@ private:
         tail->_prev = node;
     }
 };
+
+int main() {
+    vector<string> cmd= {"LRUCache","put","put","put","put","get","get","get","get","put","get","get","get","get","get"};
+    vector<vector<int>> args= {{3},{1,1},{2,2},{3,3},{4,4},{4},{3},{2},{1},{5,5},{1},{2},{3},{4},{5}};
+
+    LRUCache cache(args[0][0]);
+
+    for (int i = 1; i < cmd.size(); ++i) {
+        if (cmd[i] == "get") {
+            cache.get(args[i][0]);
+        } else if (cmd[i] == "put") {
+            cache.put(args[i][0], args[i][1]);
+        }
+    }
+
+    return 0;
+}
 
 /**
  * Your LRUCache object will be instantiated and called as such:
