@@ -55,9 +55,6 @@ public:
     }
     
     int get(int key) {
-        cout << "get: " << key << endl;
-        printList(head);
-
         if (mapping.count(key) == 0) {
             return -1;
         }
@@ -71,16 +68,10 @@ public:
     }
     
     void put(int key, int value) {
-        cout << "put: " << key << endl;
-        printList(head);
-        
         if (mapping.count(key) == 0) {
             DoublyLinkedListNode* node = new DoublyLinkedListNode(key, value);
 
             moveToTail(node);
-            
-            cout << "after put: " << key << endl;
-            printList(head);
             
             mapping[key] = node;
                         
@@ -94,10 +85,6 @@ public:
                 DoublyLinkedListNode* nextNode = toDiscard->_next;
                 head->_next = nextNode;
                 nextNode->_prev = head;
-
-                cout << "after discard: " << key << endl;
-                printList(head);
-                
             }
         } else {
             DoublyLinkedListNode* node = mapping[key];
@@ -130,6 +117,13 @@ private:
     }
 };
 
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */ 
+
 int main() {
     vector<string> cmd= {"LRUCache","put","put","put","put","get","get","get","get","put","get","get","get","get","get"};
     vector<vector<int>> args= {{3},{1,1},{2,2},{3,3},{4,4},{4},{3},{2},{1},{5,5},{1},{2},{3},{4},{5}};
@@ -146,10 +140,3 @@ int main() {
 
     return 0;
 }
-
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache* obj = new LRUCache(capacity);
- * int param_1 = obj->get(key);
- * obj->put(key,value);
- */ 
