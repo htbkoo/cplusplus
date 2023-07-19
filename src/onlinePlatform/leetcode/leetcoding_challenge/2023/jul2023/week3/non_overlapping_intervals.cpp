@@ -18,6 +18,34 @@ public:
             return 0;
         }
         
+        // TODO: make a copy of intervals to avoid mutating input
+        // intervals = vector<vector<int>>(intervals.begin(), intervals.end());
+        
+        sort(intervals.begin(), intervals.end(), [](vector<int>& interval1, vector<int>& interval2) { return interval1[1] < interval2[1]; });
+        
+        int currEnd = intervals[0][1];
+        int answer = 0;
+        for (int i = 1; i < intervals.size(); ++i) {
+            int start = intervals[i][0];
+            int end = intervals[i][1];
+            if (start < currEnd) {
+                answer++;
+            } else {
+                currEnd = end;
+            }
+        }
+        
+        return answer;
+    }
+};
+
+class RESolution {
+public:
+    int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+        if (intervals.size() == 0) {
+            return 0;
+        }
+        
         cout << "sorting" << endl;
 
         // TODO: make a copy of intervals to avoid mutating input
