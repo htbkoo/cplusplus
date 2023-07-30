@@ -16,25 +16,6 @@ const int UNINITIALIZED = 9999999;
 class Solution {
 public:
     int strangePrinter(string s) {
-        // merge substring with same characters
-        // vector<char> stack;
-        // for (auto ch: s) {
-        //     if (stack.size() == 0 || stack.back() != ch) {
-        //         stack.push_back(ch);
-        //     }
-        // }
-        // s = string(stack.begin(), stack.end());        
-
-        // chPositions = vector<vector<int>>();
-        // for (char ch = 'a'; ch <= 'z'; ++ch) {
-        //     chPositions.push_back(vector<int>());
-        // }
-        
-        // for (int i = 0; i < s.size(); ++i) {
-        //     auto ch = s[i];
-        //     chPositions[ch - 'a'].push_back(i);
-        // }
-        
         if (s.size() == 0) {
             return 0;
         }
@@ -90,51 +71,11 @@ private:
                     }
                     count += findMin(s, s[i + 1], i + 1, hi);
                 }
-
-                cout << currCh << " " << lo << " " << hi << " " << i << " " << firstStart << " " << firstEnd << " " << count << endl;
-
                 memo[currChIdx][lo][hi] = min(
                     memo[currChIdx][lo][hi],
                     count
                 );
             }
-            // if (currCh == s[lo]) {
-            //     memo[currChIdx][lo][hi] = findMin(s, currCh, lo + 1, hi);
-            // } else {
-            //     int nextStart = lo;
-            //     int firstEnd = lo;
-            //     for (int i = lo; i < hi; ++i) {
-            //         if (s[i] != currCh) {
-            //             firstEnd = i;
-            //         }
-            //         + 1 + findMin(s, s[i + 1], i + 1, hi)
-
-            //         memo[currChIdx][lo][hi] = min(
-            //             memo[currChIdx][lo][hi],
-            //             count
-            //         );
-            //     }
-                
-            //     auto chIdx = s[lo] - 'a';
-            //     auto it = lower_bound(chPositions[chIdx].begin(), chPositions[chIdx].end(), lo);
-
-            //     int beginPosIdx = distance(chPositions[chIdx].begin(), it);
-
-            //     for (int posIdx = beginPosIdx; posIdx < chPositions[chIdx].size(); posIdx++) {
-            //         auto nextHi = chPositions[chIdx][posIdx];
-            //         int turns = 1 + findMin(s, nextHi + 1, hi);
-
-            //         if (posIdx > beginPosIdx) {
-            //             turns += findMin(s, lo + 1, nextHi - 1);
-            //         }
-            //         memo[lo][hi] = min(
-            //             memo[lo][hi],
-            //             turns
-            //         );
-            //     }
-
-            //     return memo[lo][hi];
-            // }
         }
         return memo[currChIdx][lo][hi];
     }
@@ -211,7 +152,6 @@ private:
     }
 };
 
-/*
 class WASolution2 {
 public:
     int strangePrinter(string s) {
