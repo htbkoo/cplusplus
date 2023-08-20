@@ -57,25 +57,27 @@ public:
         
         // sortGroup
         unordered_map<int, unordered_set<int>> groupsAfter;
-        unordered_map<int, int> outdegrees;
+        unordered_map<int, unordered_set<int>> groupsBefore;
         for (int after = 0; after < beforeItems.size(); ++after) {
             int a = find(after);
-            if (outdegrees.count(a) == 0) {
-                outdegrees[a] = 0;
+            if (groupsBefore.count(a) == 0) {
+                groupsBefore[a] = unordered_set<int>();
             }
             for (int before: beforeItems[after]) {                
                 int b = find(before);
                 if (a != b) {
                     groupsAfter[b].insert(a);
-                    outdegrees[a]++;
+                    groupsBefore[a].insert(b);
                 }
             }
         }
         queue<int> candidates;
-        for (auto& [i, outdegree]: outdegrees) {
-            if (outdegree == 0) {
-                candidates.push(i);
+        unordered_map<int, int> outdegrees;
+        for (auto& [n, g]: groupsBefore) {
+            if (g.size() == 0) {
+                candidates.push(n);
             }
+            outdegrees[n] = g.size();
         }
         vector<int> orderedGroups;
         while (candidates.size() > 0) {
