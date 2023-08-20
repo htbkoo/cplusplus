@@ -180,3 +180,19 @@ private:
         return true;
     }
 };
+
+int main() {
+    Solution soln;
+
+    int n = 8, m = 2;
+    vector<int> group = {-1,-1,1,0,0,1,0,-1};
+    vector<vector<int>> beforeItems = {{},{6},{5},{6},{3,6},{},{},{}};
+
+    for (auto i: soln.sortItems(n, m, group, beforeItems)) {
+        cout << i << ", ";
+    }
+
+    cout << endl;
+
+    return 0;
+}
