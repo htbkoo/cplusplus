@@ -25,7 +25,7 @@ public:
         sizes = vector<int>(n, 1);
         
         vector<unordered_set<int>> groupMap;
-        for (int i = 0; i < m; ++i) {
+        for (int i = 0; i < n; ++i) {
             groupMap.push_back(unordered_set<int>());
         }        
         for (int i = 0; i < n; ++i) {
@@ -37,6 +37,9 @@ public:
         int numGroups = n;
         for (int i = 0; i < groupMap.size(); ++i) {
             auto items = groupMap[i];
+            if (items.size() == 0) {
+                continue;
+            }
             int firstItem = *items.begin();
             for (auto item: items) {
                 numGroups -= unionGroups(firstItem, item);
@@ -44,7 +47,7 @@ public:
         }
         
         vector<unordered_set<int>> itemsInGroups;
-        for (int i = 0; i < m; ++i) {
+        for (int i = 0; i < n; ++i) {
             itemsInGroups.push_back(unordered_set<int>());
         }        
         for (int i = 0; i < n; ++i) {
@@ -53,19 +56,24 @@ public:
         }
         
         // sortGroup
-        vector<unordered_set<int>> groupsAfter;
-        vector<int> outdegrees = vector<int>(m, 0);
+        unordered_map<int, unordered_set<int>> groupsAfter;
+        unordered_map<int, int> outdegrees;
         for (int after = 0; after < beforeItems.size(); ++after) {
             int a = find(after);
+            if (outdegrees.count(a) == 0) {
+                outdegrees[a] = 0;
+            }
             for (int before: beforeItems[after]) {                
                 int b = find(before);
-                groupsAfter[b].insert(a);
-                outdegrees[a]++;
+                if (a != b) {
+                    groupsAfter[b].insert(a);
+                    outdegrees[a]++;
+                }
             }
         }
         queue<int> candidates;
-        for (int i = 0; i < outdegrees.size(); ++i) {
-            if (outdegrees[i] == 0) {
+        for (auto& [i, outdegree]: outdegrees) {
+            if (outdegree == 0) {
                 candidates.push(i);
             }
         }
@@ -143,8 +151,11 @@ private:
         }
         for (auto item: items) {
             for (auto before: beforeItems[item]) {
-                outdegrees[item]++;
-                itemsAfter[before].insert(item);
+                bool isInSameGroup = items.count(before) > 0;
+                if (isInSameGroup) {
+                    outdegrees[item]++;
+                    itemsAfter[before].insert(item);
+                } 
             }
         }
 
