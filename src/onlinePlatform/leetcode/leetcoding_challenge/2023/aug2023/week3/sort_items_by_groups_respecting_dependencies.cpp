@@ -54,22 +54,20 @@ public:
         
         // sortGroup
         vector<unordered_set<int>> groupsAfter;
-        vector<unordered_set<int>> groupsBefore;
+        vector<int> outdegrees = vector<int>(m, 0);
         for (int after = 0; after < beforeItems.size(); ++after) {
             int a = find(after);
             for (int before: beforeItems[after]) {                
                 int b = find(before);
                 groupsAfter[b].insert(a);
-                groupsBefore[a].insert(b);
+                outdegrees[a]++;
             }
         }
         queue<int> candidates;
-        vector<int> outdegrees;
-        for (auto& g: groupsBefore) {
-            if (g.size() == 0) {
-                candidates.push(outdegrees.size());
+        for (int i = 0; i < outdegrees.size(); ++i) {
+            if (outdegrees[i] == 0) {
+                candidates.push(i);
             }
-            outdegrees.push_back(g.size());
         }
         vector<int> orderedGroups;
         while (candidates.size() > 0) {
@@ -91,6 +89,12 @@ public:
         
         vector<int> answer;
         // sortItemsInGroup
+        for (auto g: orderedGroups) {
+            if (!expandGroupAndSort(answer, g, itemsInGroups, beforeItems)) {
+                // there are cycle within the group
+                return NO_SOLUTION;
+            }
+        }
 
         return answer;
     }
@@ -121,5 +125,58 @@ private:
         parents[y] = x;
         sizes[x] += sizes[y];
         return 1;
+    }
+
+    bool expandGroupAndSort(
+        vector<int>& answer, 
+        int g, 
+        vector<unordered_set<int>>& itemsInGroups, 
+        vector<vector<int>>& beforeItems
+    ) {
+        auto& items = itemsInGroups[g];
+
+        unordered_map<int, int> outdegrees;
+        unordered_map<int, unordered_set<int>> itemsAfter;
+        for (auto item: items) {
+            outdegrees[item] = 0;
+            itemsAfter[item] = unordered_set<int>();
+        }
+        for (auto item: items) {
+            for (auto before: beforeItems[item]) {
+                outdegrees[item]++;
+                itemsAfter[before].insert(item);
+            }
+        }
+
+        queue<int> candidates;
+        for (auto& [item, outdegree]: outdegrees) {
+            if (outdegree == 0) {
+                candidates.push(item);
+            }
+        }
+
+        vector<int> result;
+        while (candidates.size() > 0) {
+            int c = candidates.front();
+            candidates.pop();
+
+            result.push_back(c);
+            for (auto after: itemsAfter[c]) {
+                outdegrees[after]--;
+                if (outdegrees[after] == 0) {
+                    candidates.push(after);
+                }
+            }
+        }
+
+        if (result.size() < items.size()) {
+            return false;
+        }
+
+        for (auto item: result) {
+            answer.push_back(item);
+        }
+
+        return true;
     }
 };
