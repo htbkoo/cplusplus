@@ -13,6 +13,32 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 
 class Solution {
 public:
+    int maximumScore(vector<int>& nums, int k) {        
+        int answer = nums[k];
+        int minNum = nums[k];
+        int left = k;
+        int right = k;
+        while (right - left + 1 < nums.size()) {
+            int leftNum = left > 0 ? nums[left - 1] : numeric_limits<int>::min();
+            int rightNum = (right < (nums.size() - 1)) ? nums[right + 1] : numeric_limits<int>::min();
+            
+            if (leftNum > rightNum) {
+                minNum = min(minNum, leftNum);
+                left--;
+            } else {
+                minNum = min(minNum, rightNum);
+                right++;
+            }
+            
+            answer = max(answer, minNum * (right - left + 1));
+        }
+        
+        return answer;
+    }
+};
+
+class FirstSolution {
+public:
     int maximumScore(vector<int>& nums, int k) {
         priority_queue<pair<int, int>> pq;
         if (k > 0) {
