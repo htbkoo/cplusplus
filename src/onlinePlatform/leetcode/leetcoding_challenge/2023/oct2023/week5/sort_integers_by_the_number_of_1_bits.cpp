@@ -11,20 +11,51 @@
 #include <iostream> // includes cin to read from stdin and cout to write to stdout
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
-    vector<int> sortByBits(vector<int>& arr) {
-        sort(begin(arr), end(arr), [&](int a, int b) { return countBit(a) < countBit(b); });
-        return arr;        
+    int averageOfSubtree(TreeNode* root) {
+        answer = 0;
+        getCountAndSum(root);
+        return answer;
     }
     
 private:
-    int countBit(int num) {
-        int count = 0;
-        while (num > 0) {
-            count += num % 2;
-            num /= 2;            
+    int answer;
+    
+    pair<int, int> getCountAndSum(TreeNode* root) {
+        if (root == nullptr) {
+            return pair{0, 0};
         }
-        return count;
+        
+        auto [leftCount, leftSum] = getCountAndSum(root->left);
+        auto [rightCount, rightSum] = getCountAndSum(root->right);
+        
+        int sum = leftSum + rightSum + root->val;
+        int count = 1 + leftCount + rightCount;
+        int avg = sum / count;
+        if (avg == root->val) {
+            answer++;
+        }
+        return pair{count, sum};
     }
 };
