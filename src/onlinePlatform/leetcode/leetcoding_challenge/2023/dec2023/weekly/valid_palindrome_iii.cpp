@@ -16,6 +16,42 @@ const int UNINITIALIZED = 1001;
 class Solution {
 public:
     bool isValidPalindrome(string s, int k) {
+        vector<vector<int>> memo = vector<vector<int>>();
+
+        for (int i = 0; i < s.size(); ++i) {
+            memo.push_back(vector<int>(s.size(), UNINITIALIZED));
+        }
+
+        for (int j = 0; j < s.size(); ++j) {
+            for (int i = 0; i <= j; ++i) {
+                memo[j][i] = 0;
+            }
+        }
+
+        for (int x = 1; x < s.size(); ++x) {
+            int j = 0;
+            while (j < s.size() && (x + j) < s.size()) {
+                int i = x + j;
+                if (s[i] == s[j]) {
+                    memo[j][i] = memo[j + 1][i - 1];
+                } else {
+                    memo[j][i] = 1 + min(
+                        memo[j][i - 1],
+                        memo[j + 1][i]
+                    );
+                }
+                j++;
+            }
+        }
+
+
+        return memo[0][s.size() - 1] <= k;
+    }
+};
+
+class TopDownSolution {
+public:
+    bool isValidPalindrome(string s, int k) {
         memo = vector<vector<int>>();
 
         for (int i = 0; i <= s.size(); ++i) {
@@ -115,3 +151,12 @@ private:
         return memo[i][j][k];
     }
 };
+
+int main() {
+    Solution soln;
+
+    // cout << soln.isValidPalindrome("abcdeca", 2) << endl;
+    cout << soln.isValidPalindrome("aaabaabaa", 1) << endl;
+
+    return 0;
+}
