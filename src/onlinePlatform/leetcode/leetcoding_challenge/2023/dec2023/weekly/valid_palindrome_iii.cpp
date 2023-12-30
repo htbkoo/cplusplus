@@ -11,9 +11,45 @@
 #include <iostream> // includes cin to read from stdin and cout to write to stdout
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
-const int UNINITIALIZED = -1;
+const int UNINITIALIZED = 1001;
 
 class Solution {
+public:
+    bool isValidPalindrome(string s, int k) {
+        memo = vector<vector<int>>();
+
+        for (int i = 0; i <= s.size(); ++i) {
+            memo.push_back(vector<int>(s.size() + 1, UNINITIALIZED));
+        }
+
+        return findMin(s, 0, s.size() - 1) <= k;
+    }
+
+private:
+    vector<vector<int>> memo;
+
+    int findMin(string& s, int i, int j) {
+        if (i >= j) {
+            return 0;
+        }
+
+        if (memo[i][j] == UNINITIALIZED) {
+            if (s[i] == s[j]) {
+                memo[i][j] = findMin(s, i + 1, j - 1);
+            } else {
+                memo[i][j] = 1 + min(
+                    findMin(s, i + 1, j),
+                    findMin(s, i, j - 1)
+                );
+
+            }
+        }
+
+        return memo[i][j];
+    }
+};
+
+class TLESolution {
 public:
     bool isValidPalindrome(string s, int k) {
         memo = unordered_map<string, bool>();
