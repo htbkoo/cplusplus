@@ -11,9 +11,77 @@
 #include <iostream> // includes cin to read from stdin and cout to write to stdout
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
+class Solution {
+public:
+    int cherryPickup(vector<vector<int>>& grid) {
+        int HEIGHT = grid.size();
+        int WIDTH = grid[0].size();
+
+        int ROBOT_1_START_X = 0;
+        int ROBOT_2_START_X = WIDTH - 1;
+        // TODO: what if WIDTH == 1?
+
+        vector<vector<int>> curr;
+        for (int x = 0; x < WIDTH; x++) {
+            curr.push_back(vector<int>(WIDTH, numeric_limits<int>::min()));
+        }
+        curr[ROBOT_1_START_X][ROBOT_2_START_X] = getCherries(grid, 0, ROBOT_1_START_X, ROBOT_2_START_X);
+
+        int answer = 0;
+        for (int y = 1; y < HEIGHT; ++y) {
+            vector<vector<int>> prev = curr;
+            curr = vector<vector<int>>();
+            for (int x = 0; x < WIDTH; x++) {
+                curr.push_back(vector<int>(WIDTH, numeric_limits<int>::min()));
+            }
+
+            for (int x1 = 0; x1 < WIDTH; x1++) {
+                for (int x2 = 0; x2 < WIDTH; x2++) {
+                    for (int dx1 =-1; dx1 <= 1; ++dx1) {
+                        int px1 = x1 + dx1;
+                        if (px1 < 0 or px1 >= grid[0].size()) {
+                            continue;
+                        }
+
+                        for (int dx2 =-1; dx2 <= 1; ++dx2) {
+                            int px2 = x2 + dx2;
+                            if (px2 < 0 or px2 >= grid[0].size()) {
+                                continue;
+                            }
+
+                            curr[x1][x2] = max(
+                                curr[x1][x2],
+                                getCherries(grid, y, x1, x2) + prev[px1][px2]
+                            );
+
+                            if (y == HEIGHT - 1) {
+                                answer = max(
+                                    answer,
+                                    curr[x1][x2]
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return answer;
+    }
+
+private:
+    int getCherries(vector<vector<int>>& grid, int y, int x1, int x2) {
+        int cherries = grid[y][x1];
+        if (x2 != x1) {
+            cherries += grid[y][x2];
+        }
+        return cherries;
+    }
+};
+
 const int UNINITIALIZED = -1;
 
-class Solution {
+class FirstSolution {
 public:
     int cherryPickup(vector<vector<int>>& grid) {
         int HEIGHT = grid.size();
@@ -74,34 +142,6 @@ private:
             cherries += grid[y][x2];
         }
         return cherries;
-    }
-};
-
-class WIPSolution {
-public:
-    int cherryPickup(vector<vector<int>>& grid) {
-        int HEIGHT = grid.size();
-        int WIDTH = grid[0].size();
-
-        int ROBOT_1_START_X = 0;
-        int ROBOT_2_START_X = WIDTH - 1;
-        // TODO: what if WIDTH == 1?
-
-        vector<vector<int>> curr;
-        for (int x = 0; x < WIDTH; x++) {
-            curr.push_back(vector<int>(x, 0));
-        }
-        curr[ROBOT_1_START_X][ROBOT_2_START_X] = grid[0][ROBOT_1_START_X] + grid[0][ROBOT_2_START_X];
-
-        for (int y = 1; y < HEIGHT; ++y) {
-            for (int x1 = 0; x1 < WIDTH; x1++) {
-                for (int x2 = 0; x2 < WIDTH; x2++) {
-                    // curr.push_back(vector<int>(x, 0));
-                }
-            }
-        }
-
-        return 0;
     }
 };
 
