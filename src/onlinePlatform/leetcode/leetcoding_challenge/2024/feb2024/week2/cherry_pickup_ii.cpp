@@ -31,7 +31,7 @@ public:
         int ROBOT_2_START_X = WIDTH - 1;
         // TODO: what if WIDTH == 1?
 
-        return grid[0]findMax(grid, 1, ROBOT_1_START_X, ROBOT_2_START_X);
+        return getCherries(grid, 0, ROBOT_1_START_X, ROBOT_2_START_X) + findMax(grid, 1, ROBOT_1_START_X, ROBOT_2_START_X);
     }
 
 private:
@@ -57,14 +57,9 @@ private:
                         continue;
                     }
 
-                    int cherries = grid[y][nx1];
-                    if (nx2 != nx1) {
-                        cherries += grid[y][nx2];
-                    }
-
                     memo[y][x1][x2] = max(
                         memo[y][x1][x2],
-                        cherries + findMax(grid, y + 1, nx1, nx2)
+                        getCherries(grid, y, nx1, nx2) + findMax(grid, y + 1, nx1, nx2)
                     );
                 }
             }
