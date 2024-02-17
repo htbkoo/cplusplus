@@ -14,6 +14,33 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     int furthestBuilding(vector<int>& heights, int bricks, int ladders) {
+        priority_queue<int> avoidedBricks;
+
+        for (int i = 1; i < heights.size(); ++i) {
+            if (heights[i] > heights[i - 1]) {
+                int needBricks = heights[i] - heights[i - 1];
+
+                avoidedBricks.push(-needBricks);
+                if (avoidedBricks.size() > ladders) {
+                    int prevBricks = -avoidedBricks.top();
+                    avoidedBricks.pop();
+
+                    if (prevBricks > bricks) {
+                        return i - 1;
+                    } else {
+                        bricks -= prevBricks;
+                    }
+                }
+            }
+        }
+
+        return heights.size() - 1;
+    }
+};
+
+class WASolution {
+public:
+    int furthestBuilding(vector<int>& heights, int bricks, int ladders) {
         priority_queue<int> usedBricks;
 
         for (int i = 1; i < heights.size(); ++i) {
