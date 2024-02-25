@@ -43,6 +43,72 @@ public:
     bool canTraverseAllPairs(vector<int>& nums) {
         populatePrimes();
 
+        unordered_set<int> numsSet(begin(nums), end(nums));
+        nums = vector<int>(begin(numsSet), end(numsSet));
+
+        for (int i = 0; i < nums.size(); ++i) {
+            parents.push_back(i);
+        }
+        sizes = vector<int>(nums.size(), 1);
+
+        int largestSetSize = 1;
+
+        int largest = *max_element(begin(nums), end(nums));
+        for (auto p: primes) {
+            if (p > largest) {
+                break;
+            }
+
+            int rep = -1;
+
+            for (int i = 0; i < nums.size(); ++i) {
+                if (nums[i] % p == 0) {
+                    if (rep == -1) {
+                        rep = i;
+                    }
+                    largestSetSize = max(largestSetSize, unionSets(i, rep));
+                }
+            }
+        }
+
+        return largestSetSize == nums.size();
+    }
+
+private:
+    vector<int> parents;
+    vector<int> sizes;
+
+    int find(int x) {
+        if (parents[x] != x) {
+            parents[x] = find(parents[x]);
+        }
+        return parents[x];
+    }
+
+    int unionSets(int x, int y) {
+        x = find(x);
+        y = find(y);
+
+        if (x != y) {
+            if (sizes[y] > sizes[x]) {
+                int temp = y;
+                y = x;
+                x = temp;
+            }
+
+            parents[y] = x;
+            sizes[x] += sizes[y];
+        }
+
+        return sizes[x];
+    }
+};
+
+class TLESolution {
+public:
+    bool canTraverseAllPairs(vector<int>& nums) {
+        populatePrimes();
+
         for (int i = 0; i < nums.size(); ++i) {
             parents.push_back(i);
         }
