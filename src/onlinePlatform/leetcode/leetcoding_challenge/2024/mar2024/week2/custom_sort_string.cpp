@@ -14,6 +14,24 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     string customSortString(string order, string s) {
+        unordered_map<char, int> indices;
+        for (auto ch: s) {
+            indices[ch] = -1;
+        }
+        for (int i = 0; i < order.size(); ++i) {
+            char ch = order[i];
+            indices[ch] = i;
+        }
+
+        sort(begin(s), end(s), [&](char a, char b){ cout << a << " " << indices[a] << endl; return indices[a] < indices[b]; });
+
+        return s;
+    }
+};
+
+class FirstSolution {
+public:
+    string customSortString(string order, string s) {
         unordered_map<char, int> counter;
         for (auto ch: s) {
             counter[ch]++;
@@ -36,3 +54,12 @@ public:
         return answer;
     }
 };
+
+int main () {
+    Solution soln;
+
+    cout << soln.customSortString("ba", "abababababaab") << endl;
+    cout << soln.customSortString("bcafg", "abcd") << endl;
+
+    return 0;
+}
