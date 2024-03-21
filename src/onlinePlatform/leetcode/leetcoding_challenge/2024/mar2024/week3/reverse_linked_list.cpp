@@ -32,6 +32,27 @@ struct ListNode {
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
+        if (head == nullptr) {
+            return head;
+        }
+
+        if (head->next == nullptr) {
+            return head;
+        }
+
+        ListNode* next = head->next;
+        head->next = nullptr;
+
+        ListNode* answer = reverseList(next);
+        next->next = head;
+
+        return answer;
+    }
+};
+
+class IterativeSolution {
+public:
+    ListNode* reverseList(ListNode* head) {
         ListNode* prev = nullptr;
 
         while (head != nullptr) {
