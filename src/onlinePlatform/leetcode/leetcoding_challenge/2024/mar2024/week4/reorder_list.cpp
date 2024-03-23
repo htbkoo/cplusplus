@@ -32,6 +32,56 @@ struct ListNode {
 class Solution {
 public:
     void reorderList(ListNode* head) {
+        if (head == nullptr || head->next == nullptr || head->next->next == nullptr) {
+            return;
+        }
+
+        auto fast = head;
+        auto slow = head;
+
+        while (fast != nullptr && fast->next != nullptr && fast->next->next != nullptr) {
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+
+        auto midPrev = slow;
+
+        auto tail = reverseList(midPrev);
+
+        while (head != tail && head != nullptr && tail != nullptr) {
+            auto headNext = head->next;
+            auto tailNext = tail->next;
+
+            head->next = tail;
+            tail->next = headNext;
+
+            head = headNext;
+            tail = tailNext;
+        }
+
+        return;
+    }
+
+private:
+    ListNode* reverseList(ListNode* head) {
+        ListNode* prev = head;
+        head = head->next;
+        prev->next = nullptr;
+
+        while (head) {
+            auto next = head->next;
+            head->next = prev;
+            prev = head;
+            head = next;
+        }
+
+        return prev;
+    }
+};
+
+class FirstSolution {
+public:
+    void reorderList(ListNode* head) {
         auto curr = head;
 
         vector<ListNode*> arr;
