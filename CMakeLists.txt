@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.25)
 project(cplusplus)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(cplusplus src/onlinePlatform/leetcode/leetcoding_challenge/2023/nov2023/week4/knight_dialer.cpp)
+add_executable(cplusplus main.cpp)
