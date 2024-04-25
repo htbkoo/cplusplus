@@ -22,6 +22,37 @@ public:
         vector<int> longest(CHARSET_SIZE, 0);
 
         for (int i = 0; i < s.size(); ++i) {
+            auto o = ord(s[i]);
+
+            int best = longest[o];
+            for (int j = max(0, o - k); j < min(CHARSET_SIZE, o + k + 1); ++j) {
+                best = max(best, 1 + longest[j]);
+            }
+            longest[o] = best;
+        }
+
+        int answer = 0;
+        for (int i = 0; i < CHARSET_SIZE; ++i) {
+            answer = max(answer, longest[i]);
+        }
+
+        return answer;
+    }
+
+private:
+    int ord(char ch) {
+        return ch - 'a';
+    }
+};
+
+class FirstSolution {
+public:
+    int longestIdealString(string s, int k) {
+        int CHARSET_SIZE = 26;
+
+        vector<int> longest(CHARSET_SIZE, 0);
+
+        for (int i = 0; i < s.size(); ++i) {
             vector<int> prev = vector<int>(begin(longest), end(longest));
 
             auto o = ord(s[i]);
