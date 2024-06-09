@@ -14,6 +14,24 @@ using namespace std; // since cin and cout are both in namespace std, this saves
 class Solution {
 public:
     long long numberOfSubstrings(string s) {
+        int NUM_LOWERCASE_CHARS = 26;
+        vector<int> counter(NUM_LOWERCASE_CHARS, 0);
+
+        long long answer = 0;
+        for (auto ch: s) {
+            int idx = (int) (ch - 'a');
+
+            counter[idx]++;
+            answer += counter[idx];
+        }
+
+        return answer;
+    }
+};
+
+class FirstSolution {
+public:
+    long long numberOfSubstrings(string s) {
         unordered_map<char, int> counter;
 
         long long answer = 0;
