@@ -23,6 +23,44 @@ public:
             }
         }
 
+        int best = 0;
+        int curr = 0;
+        for (int i = 0; i < min(n, minutes); ++i) {
+            if (grumpy[i] == 1) {
+                curr += customers[i];
+                best = max(best, curr);
+            }
+        }
+
+        for (int i = minutes; i < n; ++i) {
+            int left = i - minutes;
+            if (grumpy[left] == 1) {
+                curr -= customers[left];
+            }
+
+            if (grumpy[i] == 1) {
+                curr += customers[i];
+            }
+
+            best = max(best, curr);
+        }
+
+        return alreadySatisfied + best;
+    }
+};
+
+class FirstSolution {
+public:
+    int maxSatisfied(vector<int>& customers, vector<int>& grumpy, int minutes) {
+        int n = customers.size();
+
+        int alreadySatisfied = 0;
+        for (int i = 0; i < n; ++i) {
+            if (grumpy[i] == 0) {
+                alreadySatisfied += customers[i];
+            }
+        }
+
         if (minutes >= n) {
             for (int i = 0; i < n; ++i) {
                 if (grumpy[i] == 1) {
