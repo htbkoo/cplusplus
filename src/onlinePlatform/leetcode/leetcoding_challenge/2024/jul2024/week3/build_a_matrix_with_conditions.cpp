@@ -72,14 +72,14 @@ private:
                 
                 assignedCount++;
                 indices[child] = curr;
+                curr--;
                 for (auto p: parents[child]) {
                     outdegrees[p]--;
                     if (outdegrees[p] == 0) {
                         candidates.push_back(p);
                     }
                 }
-            }
-            curr--;
+            }            
         }
         
         if (assignedCount < k) {
@@ -93,9 +93,14 @@ private:
 int main() {
     Solution soln;
 
-    vector<vector<int>> rowConditions = {{1,2},{3,2}}, colConditions = {{2,1},{3,2}};
+    // int k = 3;
+    // vector<vector<int>> rowConditions = {{1,2},{3,2}}, colConditions = {{2,1},{3,2}};
 
-    auto answer = soln.buildMatrix(3, rowConditions, colConditions);
+    int k = 8;
+    vector<vector<int>> rowConditions = {{1,2},{7,3},{4,3},{5,8},{7,8},{8,2},{5,8},{3,2},{1,3},{7,6},{4,3},{7,4},{4,8},{7,3},{7,5}};
+    vector<vector<int>> colConditions = {{5,7},{2,7},{4,3},{6,7},{4,3},{2,3},{6,2}};
+
+    auto answer = soln.buildMatrix(k, rowConditions, colConditions);
     
     return 0;
 }
