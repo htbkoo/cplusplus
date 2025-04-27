@@ -25,16 +25,29 @@ public:
         
         long long answer = 0;
         int left = 0;
+        int right = 0;
         multiset<int> bst;        
-        for (int right = 0; right < nums.size(); ++right) {
-            if (nums[right] < minK || nums[right] > maxK) {                
+        while (right < nums.size()) {
+            if (nums[right] < minK || nums[right] > maxK) {       
+                cout << "reset" << endl;
                 bst = multiset<int>();
                 right++;
                 left = right;
                 continue;
             }
             
-            while (bst.size() > 0 && *begin(bst) == minK && *end(bst) == maxK) {
+            bst.insert(nums[right]);
+            
+            try {                
+                cout << right << " " ;
+                cout << *begin(bst) << " _ " ;
+                cout << *prev(end(bst)) << " __ ";
+                cout << *end(bst) << " ___ " << endl;
+            } catch (const std::exception& e) {
+                cout << " _e_ " << endl;
+            }
+            
+            while (bst.size() > 0 && *begin(bst) == minK && *prev(end(bst)) == maxK) {
                 int count = nextInvalidIndices[right] - right;
                 answer += count;
                 bst.erase(nums[left]);
@@ -44,7 +57,7 @@ public:
             right++;
         }
         
-        while (bst.size() > 0 && *begin(bst) == minK && *end(bst) == maxK) {
+        while (bst.size() > 0 && *begin(bst) == minK && *prev(end(bst)) == maxK) {
             answer++;
             bst.erase(nums[left]);
             left++;
@@ -57,10 +70,8 @@ public:
 int main() {
     Solution soln;
 
-    cout << "helloworld" << endl;
-
-    // vector<int> nums{1,3,5,2,7,5};
-    // cout << soln.countSubarrays(nums, 1, 5) << endl;
+    vector<int> nums{1,3,5,2,7,5};
+    cout << soln.countSubarrays(nums, 1, 5) << endl;
 
     return 0;
 }
