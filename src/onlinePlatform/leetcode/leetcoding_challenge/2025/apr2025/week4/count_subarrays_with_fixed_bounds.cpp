@@ -12,6 +12,14 @@
 using namespace std; // since cin and cout are both in namespace std, this saves some text
 
 class Solution {
+private:
+    void eraseOne(multiset<int> &m, int key) {
+        multiset<int>::iterator hit(m.find(key));
+        if (hit!= m.end()) {
+            m.erase(hit);
+        }
+    }
+
 public:
     long long countSubarrays(vector<int>& nums, int minK, int maxK) {
         vector<int> nextInvalidIndices(nums.size());
@@ -52,9 +60,13 @@ public:
                 int count = nextInvalidIndices[right] - right;
                 cout << "add count: " << count << " answer:" << answer << endl;
                 answer += count;
-                bst.erase(nums[left]);
+                
+                // multiset.erase erase all occurences :/
+                // bst.erase(nums[left]);
 
-                cout << "now: " << *begin(bst) << " _ " << *prev(end(bst)) << endl;
+                eraseOne(bst, nums[left]);
+
+                cout << "now: "  << bst.size() << " " << *begin(bst) << " _ " << *prev(end(bst)) << endl;
                 left++;
             }
                 
