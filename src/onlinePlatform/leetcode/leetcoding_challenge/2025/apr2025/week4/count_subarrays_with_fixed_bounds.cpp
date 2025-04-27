@@ -36,9 +36,7 @@ public:
         int right = 0;
         multiset<int> bst;        
         while (right < nums.size()) {
-            cout << "right: " << right << " nextInvalidIndices[right]: " << nextInvalidIndices[right] << endl;
             if (nums[right] < minK || nums[right] > maxK) {       
-                cout << "reset" << endl;
                 bst = multiset<int>();
                 right++;
                 left = right;
@@ -47,26 +45,14 @@ public:
             
             bst.insert(nums[right]);
             
-            try {                
-                cout << right << " " ;
-                cout << *begin(bst) << " _ " ;
-                cout << *prev(end(bst)) << " __ ";
-                cout << *end(bst) << " ___ " << endl;
-            } catch (const std::exception& e) {
-                cout << " _e_ " << endl;
-            }
-            
             while (bst.size() > 0 && *begin(bst) == minK && *prev(end(bst)) == maxK) {
                 int count = nextInvalidIndices[right] - right;
-                cout << "add count: " << count << " answer:" << answer << endl;
                 answer += count;
                 
                 // multiset.erase erase all occurences :/
                 // bst.erase(nums[left]);
-
                 eraseOne(bst, nums[left]);
 
-                cout << "now: "  << bst.size() << " " << *begin(bst) << " _ " << *prev(end(bst)) << endl;
                 left++;
             }
                 
