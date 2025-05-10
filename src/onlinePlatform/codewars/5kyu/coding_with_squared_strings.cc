@@ -81,17 +81,25 @@ void rotateCounterClockwise(std::vector<std::vector<char> > &v, int layer) {
 
         d++;
     }
-    rotateClockwise(v, layer + 1);
+    rotateCounterClockwise(v, layer + 1);
 }
 
 std::vector<std::vector<char> > toCharsVectors(const std::string &s) {
-    int n = (int) std::sqrt(s.length());
-
     std::vector<std::vector<char> > v;
-    for (auto i = 0; i < s.length(); i += n) {
-        auto ss = s.substr(i, n);
+    auto curr = 0;
+    std::string::size_type loc;
+    while (true) {
+        loc = s.find(LINE_SEPARATOR, curr);
+        if (loc == std::string::npos) {
+            auto ss = s.substr(curr, s.length() - curr);
+            std::vector<char> chars(ss.begin(), ss.end());
+            v.push_back(chars);
+            break;
+        }
+        auto ss = s.substr(curr, loc - curr);
         std::vector<char> chars(ss.begin(), ss.end());
         v.push_back(chars);
+        curr = loc + 1;
     }
 
     return v;
@@ -126,7 +134,7 @@ public:
         auto s = joinVectorCharVector(temp, "");
 
         std::string::size_type loc = s.find(FILLER, 0);
-        if (loc != std::string::npos) {
+        if (loc == std::string::npos) {
             return s;
         } else {
             return s.substr(0, loc);
