@@ -18,6 +18,21 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+# Reference: https://google.github.io/googletest/quickstart-cmake.html#create-and-run-a-binary
+enable_testing()
+
+add_executable(
+        hello_test
+        hello_test.cc
+)
+target_link_libraries(
+        hello_test
+        GTest::gtest_main
+)
+
+include(GoogleTest)
+gtest_discover_tests(hello_test)
+
 # END  - For setting up Google Test
 ###
 
