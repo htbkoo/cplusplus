@@ -22,13 +22,16 @@ std::string joinVectorCharVector(const std::vector<std::vector<char> > &strings,
     }
 
     std::vector<std::string> v;
+    for (auto &chars: strings) {
+        std::string char_string(chars.begin(), chars.end());
+        v.push_back(char_string);
+    }
 
 
-    return std::accumulate(std::next(strings.begin()), strings.end(), strings[0],
-                           [&](const std::string &a, const std::string &b) {
-                               return a + delimiter + b;
-                           });
+
+    return joinStringVector(v, delimiter);
 }
+
 
 char FILLER_CHAR = (char) 11;
 std::string FILLER(1, FILLER_CHAR);
@@ -38,9 +41,16 @@ public:
     static std::string code(const std::string &strng) {
         long n = std::ceil(std::sqrt(strng.length()));
 
-        std::vector temp(n, std::vector(n, FILLER_CHAR));
+        std::vector temp(n, std::vector<char>(n, FILLER_CHAR));
 
-        return joinStringVector(temp, "\n");
+        for (int i = 0; i < strng.length(); ++i) {
+            int y = i / n;
+            int x = i % n;
+            temp[y][x] = strng[i];
+        }
+
+
+        return joinVectorCharVector(temp, "\n");
     }
 
     static std::string decode(const std::string &strng) {
