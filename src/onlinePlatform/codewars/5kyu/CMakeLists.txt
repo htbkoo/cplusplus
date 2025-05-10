@@ -19,3 +19,13 @@ target_link_libraries(
         GTest::gtest_main
 )
 gtest_discover_tests(square_matrix_multiplication_google_test)
+
+add_executable(
+        coding_with_squared_strings
+        coding_with_squared_strings_google_test.cc
+)
+target_link_libraries(
+        coding_with_squared_strings
+        GTest::gtest_main
+)
+gtest_discover_tests(coding_with_squared_strings)
