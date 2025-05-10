@@ -15,11 +15,8 @@ unsigned long long countChange(const unsigned int money, const std::vector<unsig
     std::vector<long long> counts(money + 1);
     counts[0] = 1;
     for (auto coin: uniqueCoins) {
-        std::vector<long long> prev(begin(counts), end(counts));
-        counts = std::vector<long long>(money + 1);
-
-        for (auto i = money; i >= coin; --i) {
-            counts[i] += prev[i - coin];
+        for (auto i = coin; i <= money; ++i) {
+            counts[i] += counts[i - coin];
         }
     }
 
