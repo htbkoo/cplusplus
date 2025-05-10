@@ -22,3 +22,4 @@ FetchContent_MakeAvailable(googletest)
 ###
 
 add_executable(cplusplus main.cpp)
+add_subdirectory(src)
