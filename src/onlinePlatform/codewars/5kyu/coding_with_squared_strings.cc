@@ -6,6 +6,10 @@
 #include <cmath>
 #include <numeric> // For std::accumulate
 
+char FILLER_CHAR = (char) 11;
+std::string FILLER(1, FILLER_CHAR);
+auto LINE_SEPARATOR = "\n";
+
 std::string joinStringVector(const std::vector<std::string> &strings, const std::string &delimiter) {
     if (strings.empty()) {
         return "";
@@ -93,9 +97,6 @@ std::vector<std::vector<char> > toCharsVectors(const std::string &s) {
     return v;
 }
 
-char FILLER_CHAR = (char) 11;
-std::string FILLER(1, FILLER_CHAR);
-
 class CodeSqStrings {
 public:
     static std::string code(const std::string &strng) {
@@ -113,7 +114,7 @@ public:
         // rotate 90 degrees clockwise
         rotateClockwise(temp, 0);
 
-        return joinVectorCharVector(temp, "\n");
+        return joinVectorCharVector(temp, LINE_SEPARATOR);
     }
 
     static std::string decode(const std::string &strng) {
